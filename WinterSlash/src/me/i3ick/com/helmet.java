@@ -277,12 +277,12 @@ public class helmet implements Listener{
 	public void checkDeath(PlayerDeathEvent event) {
 		Player p = event.getEntity().getPlayer();
 		if (plugin.ftagplayers.contains(p.getName())) {
-			p.sendMessage("test");
+			p.sendMessage("testdead");
 		  if (isRedTeam(p)) {
 			  // if player isn't frozen, freeze him. If he is, unfreeze him.
 		    if (!isFrozenRed(p)) {
 		       plugin.frozenred.add(p.getName());
-		       p.sendMessage("test");
+		       p.sendMessage("testdead");
 		       }
 		    else{
 		    	plugin.frozenred.remove(p.getName());
