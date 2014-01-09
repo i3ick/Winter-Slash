@@ -1,0 +1,41 @@
+name: Freezetag
+main: me.i3ick.com.freezetagMain
+version: 1.0
+description: Freezetag game
+commands: 
+  ftj: 
+    description: "Join the game"
+  ftl: 
+    description: "Leave the game"
+  ftsetgreen: 
+    description: "set green spawn"
+  ftsetred: 
+    description: "set red spawn"
+  ftpn: 
+    description: "set the number of players"  
+  green: 
+    description: "go to green"
+  red: 
+    description: "go to red"
+  ftlist: 
+    description: "list arenas"
+permissions: 
+  freezetag.*: 
+    description: "Gain access to all freezetag commands!"
+    children: 
+      freezetag.ftj: true
+      freezetag.ftpn: true
+      freezetag.ftl: true
+      freezetag.ftsetgreen: true
+      freezetag.ftsetred: true
+      freezetag.green: true
+      freezetag.red: true
+      freezetag.signplace: true
+    default: op
+  freezetagusers.*: 
+    description: "Give normal players permission to play Freezetag!"
+    children: 
+      freezetag.ftj: true
+      freezetag.ftl: true
+    default: op
+version: 1.0
