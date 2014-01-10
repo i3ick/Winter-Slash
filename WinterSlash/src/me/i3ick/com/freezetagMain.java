@@ -17,11 +17,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.Team;
 
 
      public class freezetagMain extends JavaPlugin{
-    	 
-    	 
+    	  
+    	 // Arrays
 	 public ArrayList<String> frozen = new ArrayList<String>();
 	 public ArrayList<String> frozenred = new ArrayList<String>();
 	 public ArrayList<String> frozengreen = new ArrayList<String>();
@@ -30,11 +35,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 	 public ArrayList<String> beaconlist = new ArrayList<String>();
 	 public ArrayList<String> ftgreen = new ArrayList<String>();
 	 public ArrayList<String> ftred = new ArrayList<String>();
+	 
+
 	
 	@Override
 	public void onDisable() {
 	
-		getLogger().info("Plugin Disabled!");
+		getLogger().info("WinterSlash Plugin Disabled!");
 	
 	}
 	
@@ -42,12 +49,20 @@ import org.bukkit.plugin.java.JavaPlugin;
 	
 	@Override
 	public void onEnable() {
-		String playerWorld = this.getConfig().getString("redspawn" + ".World" );
+		
+		//load world
+		String playerWorld = this.getConfig().getString("Worlds" + ".World" );
 		getLogger().info(playerWorld);
 		getServer().createWorld(new WorldCreator(playerWorld));
-		getLogger().info("Plugin Enabled!");
+		//register events
 		this.getServer().getPluginManager().registerEvents(new helmet(this), this);
+		
+		getLogger().info("Plugin Enabled!");
 		}
+	
+	
+
+	
 			
 	public static boolean isInt(String sender) {
 	    try {
@@ -114,19 +129,22 @@ import org.bukkit.plugin.java.JavaPlugin;
 						if(ftred.size()>ftgreen.size()){
 							ftgreen.add(p.getName());
 							p.sendMessage("green");
+
 						}
 						else if(ftgreen.size()>ftred.size()){
 							ftred.add(p.getName());
 							p.sendMessage("red");
+
 						}
 						else{
 							ftred.add(p.getName());
 							p.sendMessage("red2");
+
 						}
 					}
 				}
 				
-				//get location before teleportation
+				//get location before teleportation - to be added
 
 				
 				//teleporting to green spawn
@@ -189,6 +207,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 				         int redspawnYaw = this.getConfig().getInt("ArenaList." + args[0] + ".redspawn" + ".Yaw");
 				         int redspawnPitch = this.getConfig().getInt("ArenaList." + args[0] + ".redspawn" + ".Pitch");
 	                     String playerWorld = this.getConfig().getString("ArenaList." + args[0] + ".redspawn" + ".World");
+	                     
 				         
 				         World world = Bukkit.getWorld(playerWorld);
 
@@ -297,6 +316,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 	            this.getConfig().set("ArenaList." + args[0] + ".redspawn" + ".Yaw", player.getLocation().getYaw());
 	            this.getConfig().set("ArenaList." + args[0] + ".redspawn" + ".Pitch", player.getLocation().getPitch());
 	            this.getConfig().set("ArenaList." + args[0] + ".redspawn" + ".World", Bukkit.getName());
+	            this.getConfig().set("Worlds" + ".World", Bukkit.getName());
 	            this.getConfig().options().copyDefaults(true);
 	   		    this.saveConfig();
     	        player.sendMessage(ChatColor.YELLOW + "Red Spawn saved successfully");    
