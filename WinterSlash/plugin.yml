@@ -1,4 +1,4 @@
-name: Freezetag
+name: WinterSlash
 main: me.i3ick.com.freezetagMain
 version: 1.0
 description: Freezetag game
@@ -38,4 +38,3 @@ permissions:
       freezetag.ftj: true
       freezetag.ftl: true
     default: op
-version: 1.0

@@ -35,6 +35,8 @@ import org.bukkit.scoreboard.Team;
 	 public ArrayList<String> beaconlist = new ArrayList<String>();
 	 public ArrayList<String> ftgreen = new ArrayList<String>();
 	 public ArrayList<String> ftred = new ArrayList<String>();
+	 private WinterSlashScoreboard WinterSlashScoreboard;
+	 public WinterSlashScoreboard scoreboad = WinterSlashScoreboard;
 	 
 
 	
@@ -54,8 +56,19 @@ import org.bukkit.scoreboard.Team;
 		String playerWorld = this.getConfig().getString("Worlds" + ".World" );
 		getLogger().info(playerWorld);
 		getServer().createWorld(new WorldCreator(playerWorld));
+
+		ScoreboardManager manager = Bukkit.getScoreboardManager();
+		Scoreboard board = manager.getNewScoreboard();
+		for(Player p : Bukkit.getOnlinePlayers()){
+			p.setScoreboard(board);
+			p.setScoreboard(manager.getNewScoreboard());
+		}
+				
 		//register events
 		this.getServer().getPluginManager().registerEvents(new helmet(this), this);
+		WinterSlashScoreboard.init();
+		WinterSlashScoreboard.aliveGreen.setScore(0);
+
 		
 		getLogger().info("Plugin Enabled!");
 		}
@@ -139,7 +152,7 @@ import org.bukkit.scoreboard.Team;
 						else{
 							ftred.add(p.getName());
 							p.sendMessage("red2");
-
+							
 						}
 					}
 				}

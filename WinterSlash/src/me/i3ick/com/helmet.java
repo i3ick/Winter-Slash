@@ -367,8 +367,6 @@ public class helmet implements Listener{
 		
 		else if(plugin.ftgreen.contains(e.getPlayer().getName())){
 			Player player = (Player) e.getPlayer();
-			plugin.frozen.add(player.getName());
-			plugin.frozengreen.add(player.getName());
 			player.getInventory().setHelmet(new ItemStack(Material.ICE,1));
 			
 			int lastposX = plugin.getConfig().getInt(e.getPlayer().getName() + ".X");
