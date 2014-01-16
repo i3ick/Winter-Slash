@@ -20,7 +20,7 @@ commands:
   wslist: 
     description: "list arenas"
 permissions: 
-  freezetag.*: 
+  winterslash.*: 
     description: "Gain access to all freezetag commands!"
     children: 
       freezetag.ftj: true
@@ -32,7 +32,7 @@ permissions:
       freezetag.red: true
       freezetag.signplace: true
     default: op
-  freezetagusers.*: 
+  winterslashusers.*: 
     description: "Give normal players permission to play Freezetag!"
     children: 
       freezetag.ftj: true
