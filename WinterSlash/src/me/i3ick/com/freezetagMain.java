@@ -56,13 +56,9 @@ import org.bukkit.scoreboard.Team;
 		String playerWorld = this.getConfig().getString("Worlds" + ".World" );
 		getLogger().info(playerWorld);
 		getServer().createWorld(new WorldCreator(playerWorld));
-
 		ScoreboardManager manager = Bukkit.getScoreboardManager();
-		Scoreboard board = manager.getNewScoreboard();
-		for(Player p : Bukkit.getOnlinePlayers()){
-			p.setScoreboard(board);
-			p.setScoreboard(manager.getNewScoreboard());
-		}
+	      Scoreboard board = manager.getNewScoreboard();
+
 				
 		//register events
 		this.getServer().getPluginManager().registerEvents(new helmet(this), this);
