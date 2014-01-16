@@ -10,9 +10,9 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class PlayerSorter implements Listener{
 	
-	private freezetagMain plugin;
+	private WinterSlashMain plugin;
 	
-	public PlayerSorter (freezetagMain plugin){
+	public PlayerSorter (WinterSlashMain plugin){
 		this.plugin = plugin;
 	}
 	
