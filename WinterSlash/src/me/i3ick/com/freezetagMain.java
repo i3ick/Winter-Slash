@@ -92,7 +92,7 @@ import org.bukkit.scoreboard.Team;
 		Player player = (Player) sender;
 		Player[] onlinep = Bukkit.getServer().getOnlinePlayers();
 	
-		if(cmd.getName().equalsIgnoreCase("ftlist")){
+		if(cmd.getName().equalsIgnoreCase("wslist")){
 			ConfigurationSection sec = getConfig().getConfigurationSection("ArenaList");
 			String arenas = sec.getValues(false).keySet().toString();
 			player.sendMessage(ChatColor.GREEN + arenas);
@@ -100,7 +100,7 @@ import org.bukkit.scoreboard.Team;
 		
         
 		//join game
-		if(cmd.getName().equalsIgnoreCase("ftj")){
+		if(cmd.getName().equalsIgnoreCase("wsj")){
 			 int maxplayers = this.getConfig().getInt("Settings" + ".playernumber");
 			
 			//checks permission
@@ -271,7 +271,7 @@ import org.bukkit.scoreboard.Team;
 		
 		
 		//set player number
-		else if(cmd.getName().equals("ftpn")){
+		else if(cmd.getName().equals("wspn")){
 			if(!sender.hasPermission("freezetag.ftpn")){
 				sender.sendMessage("No permission");
 				return true;
@@ -292,7 +292,7 @@ import org.bukkit.scoreboard.Team;
 		
 		
 		//leaving the game
-		else if(cmd.getName().equalsIgnoreCase("ftl")){
+		else if(cmd.getName().equalsIgnoreCase("wsl")){
 			if(!sender.hasPermission("freezetag.ftl")){
 				sender.sendMessage("No permission");
 				return true;
@@ -315,7 +315,7 @@ import org.bukkit.scoreboard.Team;
 
 		
 		//save red spawn
-		else if(cmd.getName().equalsIgnoreCase("ftsetred")){
+		else if(cmd.getName().equalsIgnoreCase("wssetred")){
 			if(!sender.hasPermission("freezetag.ftsetred")){
 				sender.sendMessage("No permission");
 				return true;
@@ -339,12 +339,12 @@ import org.bukkit.scoreboard.Team;
 				}
 			}
 			else{
-				player.sendMessage("Name the arana to set the spawn in: /ftsetred <arena>");
+				player.sendMessage("Name the arana to set the spawn in: /wssetred <arena>");
 			}
 		}
 		
 		//save green spawn
-		else if(cmd.getName().equalsIgnoreCase("ftsetgreen")){
+		else if(cmd.getName().equalsIgnoreCase("wssetgreen")){
 			if(!sender.hasPermission("freezetag.ftsetgreen")){
 				sender.sendMessage("No permission");
 				return true;
@@ -367,7 +367,7 @@ import org.bukkit.scoreboard.Team;
 				}
 			}
 			else{
-				player.sendMessage("Name the arana to set the spawn in: /ftsetred <arena>");
+				player.sendMessage("Name the arana to set the spawn in: /wssetred <arena>");
 			}
 		}
 		
@@ -377,6 +377,7 @@ import org.bukkit.scoreboard.Team;
 				sender.sendMessage("No permission");
 				return true;
 			}
+			if(args.length == 1){
 			 int redspawnX = this.getConfig().getInt("ArenaList." + args[0] + ".redspawn" + ".X");
 	         int redspawnY = this.getConfig().getInt("ArenaList." + args[0] + ".redspawn" + ".Y");
 	         int redspawnZ = this.getConfig().getInt("ArenaList." + args[0] + ".redspawn" + ".Z");
@@ -396,6 +397,12 @@ import org.bukkit.scoreboard.Team;
 	        	 Bukkit.getServer().createWorld(new WorldCreator(playerWorld).environment(World.Environment.NORMAL));
 	             getLogger().warning("The '" + "redspawn" + ".World" + "' world from config.yml does not exist or is not loaded !");
 	         }
+		}
+		else{
+			player.sendMessage(ChatColor.YELLOW + "Use correct format: /green <arenaname>");
+			return true;
+		}
+   
 		}	
 		
 		//Go to green spawn
@@ -405,6 +412,7 @@ import org.bukkit.scoreboard.Team;
 				sender.sendMessage("No permission");
 				return true;
 			}
+			if(args.length == 1){
 			 int greenspawnX = this.getConfig().getInt("ArenaList." + args[0] + ".greenspawn" + ".X");
 	         int greenspawnY = this.getConfig().getInt("ArenaList." + args[0] + ".greenspawn" + ".Y");
 	         int greenspawnZ = this.getConfig().getInt("ArenaList." + args[0] + ".greenspawn" + ".Z");
@@ -424,6 +432,11 @@ import org.bukkit.scoreboard.Team;
 	        	 Bukkit.getServer().createWorld(new WorldCreator(playerWorld).environment(World.Environment.NORMAL));
 	             getLogger().warning("The '" + "greenspawn" + ".World" + "' world from config.yml does not exist or is not loaded !");
 	         }
+			}
+			else{
+				player.sendMessage(ChatColor.YELLOW + "Use correct format: /green <arenaname>");
+				return true;
+			}
 	   
 			
 		}

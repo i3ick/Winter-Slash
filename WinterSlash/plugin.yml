@@ -3,21 +3,21 @@ main: me.i3ick.com.freezetagMain
 version: 1.0
 description: Freezetag game
 commands: 
-  ftj: 
+  wsj: 
     description: "Join the game"
-  ftl: 
+  wsl: 
     description: "Leave the game"
-  ftsetgreen: 
+  wssetgreen: 
     description: "set green spawn"
-  ftsetred: 
+  wssetred: 
     description: "set red spawn"
-  ftpn: 
+  wspn: 
     description: "set the number of players"  
   green: 
     description: "go to green"
   red: 
     description: "go to red"
-  ftlist: 
+  wslist: 
     description: "list arenas"
 permissions: 
   freezetag.*: 

@@ -287,7 +287,7 @@ public class helmet implements Listener{
 		    else{
 		    	plugin.frozenred.remove(p.getName());
 		    }
-		    if (plugin.frozengreen.size() > plugin.frozenred.size()) {
+		    if (plugin.frozengreen.size() == plugin.ftgreen.size()) {
 		    //  end the game...
 		    Bukkit.broadcastMessage(ChatColor.GREEN + "The RED team has won the game!");
 		    return;
@@ -297,7 +297,7 @@ public class helmet implements Listener{
 		      if (!isFrozenGreen(p)) {
 	        	plugin.frozengreen.add(p.getName());
 		          }
-		      if (plugin.frozenred.size() > plugin.frozengreen.size()) {
+		      if (plugin.frozenred.size() == plugin.ftred.size()) {
 		      //  end the game...
 		      Bukkit.broadcastMessage(ChatColor.GREEN + "The GREEN team has won the game!");
 		      return;
