@@ -6,7 +6,7 @@ package me.i3ick.com;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 public class PlayerSorter implements Listener{
 	
@@ -17,7 +17,7 @@ public class PlayerSorter implements Listener{
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onPlayerChat(AsyncPlayerChatEvent e){
+	public void onPlayerMove(PlayerMoveEvent e){
 		if(plugin.frozen.contains(e.getPlayer().getName())){
 			e.getPlayer().teleport(e.getPlayer().getLocation());
 		}

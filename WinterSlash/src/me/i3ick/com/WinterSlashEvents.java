@@ -1,5 +1,10 @@
 package me.i3ick.com;
 
+import java.awt.Event;
+
+import net.minecraft.server.v1_7_R1.EnumClientCommand;
+import net.minecraft.server.v1_7_R1.PacketPlayInClientCommand;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -19,6 +24,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -99,11 +105,9 @@ public class WinterSlashEvents implements Listener{
                     }
                 }
             }
-            else{
-            }
         }
     }
-
+    
 
 
     //prevent damage from frozen players / prevent friendly fire / prevent killing frozen players
@@ -266,6 +270,7 @@ public class WinterSlashEvents implements Listener{
 
     }
 
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void checkDeath(PlayerDeathEvent event) {
         Player p = event.getEntity().getPlayer();
@@ -275,6 +280,7 @@ public class WinterSlashEvents implements Listener{
                 // if player isn't frozen, freeze him. If he is, unfreeze him.
                 if (!isFrozenRed(p)) {
                     plugin.frozenred.add(p.getName());
+                    plugin.frozen.add(p.getName());
                     p.sendMessage("testdead");
                 }
                 else{
@@ -321,14 +327,26 @@ public class WinterSlashEvents implements Listener{
         return plugin.frozenred.contains(p);
     }
 
-
+   
+    //Store death position 
+    @EventHandler
+    public void deathpos(PlayerDeathEvent e){
+    	Player p = e.getEntity();
+    	if (plugin.ftagplayers.contains(p)){
+    		 plugin.getConfig().set(p.getName() + ".X", p.getLocation().getBlockX());
+    		 plugin.getConfig().set(p.getName() + ".Y", p.getLocation().getBlockY());
+    		 plugin.getConfig().set(p.getName() + ".Z", p.getLocation().getBlockZ());
+    		 plugin.saveConfig();
+    		
+    	}
+    }
 
 
     //teleports players back to the position where they died so they can be frozen
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent e){
         if(plugin.ftred.contains(e.getPlayer().getName())){
-            String player =  e.getPlayer().getName().toString();
+            String player =  e.getPlayer().getName();
 
             e.getPlayer().getInventory().setHelmet(new ItemStack(Material.ICE,1));
 
@@ -338,7 +356,7 @@ public class WinterSlashEvents implements Listener{
             int lastposX = plugin.getConfig().getInt(player + ".X");
             int lastposY = plugin.getConfig().getInt(player + ".Y");
             int lastposZ = plugin.getConfig().getInt(player + ".Z");
-            String playerWorld = plugin.getConfig().getString("redspawn" + ".World");
+            String playerWorld = plugin.getConfig().getString("Worlds" + ".World");
             World world = Bukkit.getWorld(playerWorld);
 
             if(world != null)
