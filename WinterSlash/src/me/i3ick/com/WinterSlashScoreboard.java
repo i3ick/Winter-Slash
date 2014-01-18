@@ -27,8 +27,8 @@ public class WinterSlashScoreboard {
     public void init(){ //Something like 'main' //Grab the ready template from bukkit.
         board = Bukkit.getServer().getScoreboardManager().getNewScoreboard();
 
-        redTeam = board.registerNewObjective('\u0167' + 'c' + "Red team", "dummy"); //'Red Team' is how it will be show in the scoreboard.
-        greenTeam = board.registerNewObjective('\u0167' + '9' + "Green team", "dummy"); //'u0167' means § who means &. Basically, colors.
+        redTeam = board.registerNewObjective(ChatColor.RED + "Red team", "dummy"); //'Red Team' is how it will be show in the scoreboard.
+        greenTeam = board.registerNewObjective(ChatColor.DARK_BLUE + "Green team", "dummy"); //'u0167' means § who means &. Basically, colors.
 
         aliveRed = redTeam.getScore(Bukkit.getOfflinePlayer("Alive:"));  //see class description line 11~13
         frozenRed = redTeam.getScore(Bukkit.getOfflinePlayer("Frozen:"));
