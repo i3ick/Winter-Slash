@@ -63,7 +63,7 @@ public class WinterSlashEvents implements Listener{
     //Keeps frozen players still
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerMove(PlayerMoveEvent e){
-        if(plugin.frozen.contains(e.getPlayer().getName())){
+        if(plugin.frozenred.contains(e.getPlayer().getName())){
             e.getPlayer().teleport(e.getPlayer().getLocation());
         }
     }
@@ -269,8 +269,10 @@ public class WinterSlashEvents implements Listener{
         }
 
     }
+    
+    
 
-
+    //Game ending & freezing/unfreezing logic
     @EventHandler(priority = EventPriority.HIGHEST)
     public void checkDeath(PlayerDeathEvent event) {
         Player p = event.getEntity().getPlayer();
@@ -279,8 +281,6 @@ public class WinterSlashEvents implements Listener{
             if (isRedTeam(p)) {
                 // if player isn't frozen, freeze him. If he is, unfreeze him.
                 if (!isFrozenRed(p)) {
-                    plugin.frozenred.add(p.getName());
-                    plugin.frozen.add(p.getName());
                     p.sendMessage("testdead");
                 }
                 else{
@@ -347,9 +347,16 @@ public class WinterSlashEvents implements Listener{
     public void onPlayerRespawn(PlayerRespawnEvent e){
         if(plugin.ftred.contains(e.getPlayer().getName())){
             String player =  e.getPlayer().getName();
-
-            e.getPlayer().getInventory().setHelmet(new ItemStack(Material.ICE,1));
-
+            Player p =  e.getPlayer();
+            if (plugin.frozenred.contains(player)){
+            	plugin.frozenred.remove(player);
+            	e.getPlayer().getInventory().setHelmet(new ItemStack(Material.AIR,1));
+            }
+            else{
+            	plugin.frozenred.add(player);
+            	e.getPlayer().getInventory().setHelmet(new ItemStack(Material.ICE,1));
+            }
+            
 
 
             // tp to death position
