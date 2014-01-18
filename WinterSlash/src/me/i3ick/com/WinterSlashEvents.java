@@ -342,6 +342,15 @@ public class WinterSlashEvents implements Listener{
     }
 
 
+    
+    
+    
+    // RESPAWN EVENTS
+    // RESPAWN EVENTS
+    // RESPAWN EVENTS
+    
+    
+    
     //teleports players back to the position where they died so they can be frozen
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent e){
@@ -355,57 +364,59 @@ public class WinterSlashEvents implements Listener{
             else{
             	plugin.frozenred.add(player);
             	e.getPlayer().getInventory().setHelmet(new ItemStack(Material.ICE,1));
+            	
+            	// tp to death position
+                int lastposX = plugin.getConfig().getInt(player + ".X");
+                int lastposY = plugin.getConfig().getInt(player + ".Y");
+                int lastposZ = plugin.getConfig().getInt(player + ".Z");
+                String playerWorld = plugin.getConfig().getString("Worlds" + ".World");
+                World world = Bukkit.getWorld(playerWorld);
+
+                if(world != null)
+                {
+                    Location lastpos = new Location((World) world, lastposX, lastposY, lastposZ);
+                    e.setRespawnLocation(lastpos);
+                }
+                else
+                {
+                    Bukkit.getServer().createWorld(new WorldCreator(playerWorld).environment(World.Environment.NORMAL));
+                    plugin.getLogger().warning("The '" + "redspawn" + ".World" + "' world from config.yml does not exist or is not loaded !");
+                } 	
             }
-            
-
-
-            // tp to death position
-            int lastposX = plugin.getConfig().getInt(player + ".X");
-            int lastposY = plugin.getConfig().getInt(player + ".Y");
-            int lastposZ = plugin.getConfig().getInt(player + ".Z");
-            String playerWorld = plugin.getConfig().getString("Worlds" + ".World");
-            World world = Bukkit.getWorld(playerWorld);
-
-            if(world != null)
-            {
-                Location lastpos = new Location((World) world, lastposX, lastposY, lastposZ);
-                e.setRespawnLocation(lastpos);
-            }
-            else
-            {
-                Bukkit.getServer().createWorld(new WorldCreator(playerWorld).environment(World.Environment.NORMAL));
-                plugin.getLogger().warning("The '" + "redspawn" + ".World" + "' world from config.yml does not exist or is not loaded !");
-            }
-
-
         }
 
 
 
 
         else if(plugin.ftgreen.contains(e.getPlayer().getName())){
-            Player player = (Player) e.getPlayer();
-            player.getInventory().setHelmet(new ItemStack(Material.ICE,1));
-
-            int lastposX = plugin.getConfig().getInt(e.getPlayer().getName() + ".X");
-            int lastposY = plugin.getConfig().getInt(e.getPlayer().getName() + ".Y");
-            int lastposZ = plugin.getConfig().getInt(e.getPlayer().getName() + ".Z");
-            String playerWorld = plugin.getConfig().getString("redspawn" + ".World");
-            World world = Bukkit.getWorld(playerWorld);
-
-            if(world != null)
-            {
-                Location lastpos = new Location((World) world, lastposX, lastposY, lastposZ);
-                e.setRespawnLocation(lastpos);
+        	String player =  e.getPlayer().getName();
+            Player p =  e.getPlayer();
+            if (plugin.frozengreen.contains(player)){
+            	plugin.frozengreen.remove(player);
+            	e.getPlayer().getInventory().setHelmet(new ItemStack(Material.AIR,1));
             }
-            else
-            {
-                Bukkit.getServer().createWorld(new WorldCreator(playerWorld).environment(World.Environment.NORMAL));
-                plugin.getLogger().warning("The '" + "redspawn" + ".World" + "' world from config.yml does not exist or is not loaded !");
+            else{
+            	plugin.frozengreen.add(player);
+            	e.getPlayer().getInventory().setHelmet(new ItemStack(Material.ICE,1));
+            	
+            	// tp to death position
+                int lastposX = plugin.getConfig().getInt(player + ".X");
+                int lastposY = plugin.getConfig().getInt(player + ".Y");
+                int lastposZ = plugin.getConfig().getInt(player + ".Z");
+                String playerWorld = plugin.getConfig().getString("Worlds" + ".World");
+                World world = Bukkit.getWorld(playerWorld);
+
+                if(world != null)
+                {
+                    Location lastpos = new Location((World) world, lastposX, lastposY, lastposZ);
+                    e.setRespawnLocation(lastpos);
+                }
+                else
+                {
+                    Bukkit.getServer().createWorld(new WorldCreator(playerWorld).environment(World.Environment.NORMAL));
+                    plugin.getLogger().warning("The '" + "redspawn" + ".World" + "' world from config.yml does not exist or is not loaded !");
+                } 	
             }
-
-
-
         }
         return;
 
