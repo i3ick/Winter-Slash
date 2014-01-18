@@ -158,7 +158,7 @@ public class WinterSlashMain extends JavaPlugin{
 					}
 				}
 				
-				//get location before teleportation - to be added
+				//get location before teleportation -  to be added
 
 				
 				//teleporting to green spawn
