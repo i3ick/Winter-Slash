@@ -328,7 +328,7 @@ public class WinterSlashEvents implements Listener{
     }
 
    
-    //Store death position for teleportation
+    //Store death position for teleportation.
     @EventHandler
     public void deathpos(PlayerDeathEvent e){
     	Player p = e.getEntity();
