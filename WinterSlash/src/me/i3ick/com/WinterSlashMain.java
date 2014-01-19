@@ -1,6 +1,7 @@
 package me.i3ick.com;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -29,10 +30,12 @@ public class WinterSlashMain extends JavaPlugin{
 	 public ArrayList<String> frozenred = new ArrayList<String>();
 	 public ArrayList<String> frozengreen = new ArrayList<String>();
 	 public ArrayList<String> ftag = new ArrayList<String>();
-	 public ArrayList<String> ftagplayers = new ArrayList<String>();
 	 public ArrayList<String> beaconlist = new ArrayList<String>();
-	 public ArrayList<String> ftgreen = new ArrayList<String>();
-	 public ArrayList<String> ftred = new ArrayList<String>();
+
+	 
+	 public HashMap<String, Player> wsplayersHM = new HashMap<String, Player>();
+	 public HashMap<String, Player> wsred = new HashMap<String, Player>();
+	 public HashMap<String, Player> wsgreen = new HashMap<String, Player>();
 	 private WinterSlashScoreboard WinterSlashScoreboard;
 	 public WinterSlashScoreboard scoreboad = WinterSlashScoreboard;
 	 
@@ -93,7 +96,7 @@ public class WinterSlashMain extends JavaPlugin{
 		//join game
 		if(cmd.getName().equalsIgnoreCase("wsj")){
 			 int maxplayers = this.getConfig().getInt("Settings" + ".playernumber");
-			
+			String arena = args[0].toString();
 			//checks permission
 			if(!sender.hasPermission("freezetag.ftj")){
 				sender.sendMessage("No permission");
@@ -105,65 +108,67 @@ public class WinterSlashMain extends JavaPlugin{
 			}
 			else{
 
-			if(ftagplayers.contains(player.getName())){
+			if(wsplayersHM.containsKey(player)){
 				player.sendMessage(ChatColor.GREEN + "You are already ingame, waiting for more players...");
 				return true;
 			}
 			
-			ftagplayers.add(player.getName());
+			wsplayersHM.put(args[0], player);
 			player.sendMessage(ChatColor.YELLOW + "You have been put on the games waiting list.");
 			
 			
 			
 			//max player size
 			int redamount = maxplayers*2;
-			if(ftred.size() >= redamount){
+			if(wsred.size() >= redamount){
 				player.sendMessage(ChatColor.YELLOW + "Can't join now, game in progress");
 				return true;
 			}
 			
 			// This is the player sorter. It balances the teams so they are equal or differe by one player.
-			if(ftagplayers.size() >= maxplayers){
+			if(wsplayersHM.size() >= maxplayers){
 				ItemStack revivor = new ItemStack(Material.BLAZE_ROD,1);
 				ItemStack sword = new ItemStack(Material.WOOD_SWORD,1);
-				player.sendMessage("hi");
 				for(Player p: onlinep){
-					if(ftagplayers.contains(p.getName())){
+					if(wsplayersHM.containsKey(arena)){
+						if (wsplayersHM.containsValue(p)){
 						
 
 						WinterSlashScoreboard boardmanager = new WinterSlashScoreboard(this);
-						boardmanager.aliveRed.setScore(9);
-						boardmanager.aliveGreen.setScore(2);
+						boardmanager.aliveRed.setScore(wsred.values().size());
+						boardmanager.aliveGreen.setScore(wsgreen.values().size());
 						
-						if(ftred.size()>ftgreen.size()){
-							ftgreen.add(p.getName());
+						if(wsred.values().size()>wsgreen.size()){
+							wsgreen.put(arena, player);
 							p.sendMessage("green");
 							player.setScoreboard(boardmanager.board);
 							//add player to green team
 
 						}
-						else if(ftgreen.size()>ftred.size()){
-							ftred.add(p.getName());
+						else if(wsgreen.values().size()>wsred.size()){
+							wsred.put(arena, p);
 							p.sendMessage("red");
 							player.setScoreboard(boardmanager.board);
 							//add player to red team
 
 						}
 						else{
-							ftred.add(p.getName());
-							p.sendMessage("red2");
+							wsred.put(arena, p);
+							p.sendMessage("red");
 							player.setScoreboard(boardmanager.board);
+							
 							//add player to red team
 						}
 					}
+				}	
 				}
-				
-				//get location before teleportation -  to be added
+
 
 				
 				//teleporting to green spawn
 				for(Player p: Bukkit.getOnlinePlayers()){
-				    if(ftgreen.contains(p.getName())){
+				    if(wsgreen.containsKey(arena)){
+				    	if(wsgreen.containsValue(player)){
 				    	 int greenspawnX = this.getConfig().getInt("ArenaList." + args[0] + ".greenspawn" + ".X");
 				         int greenspawnY = this.getConfig().getInt("ArenaList." + args[0] + ".greenspawn" + ".Y");
 				         int greenspawnZ = this.getConfig().getInt("ArenaList." + args[0] + ".greenspawn" + ".Z");
@@ -213,7 +218,10 @@ public class WinterSlashMain extends JavaPlugin{
 				             getLogger().warning("The '" + "greenspawn" + ".World" + "' world from config.yml does not exist or is not loaded !");
 				         }
 				    }
-				    else if(ftred.contains(p.getName())){
+				}
+				    else if(wsred.containsKey(arena)){
+				    	if(wsred.containsValue(player)){
+
 				    	//teleporting to red spawn
 				    	 int redspawnX = this.getConfig().getInt("ArenaList." + args[0] + ".redspawn" + ".X");
 				         int redspawnY = this.getConfig().getInt("ArenaList." + args[0] + ".redspawn" + ".Y");
@@ -263,6 +271,7 @@ public class WinterSlashMain extends JavaPlugin{
 				        	 Bukkit.getServer().createWorld(new WorldCreator(playerWorld).environment(World.Environment.NORMAL));
 				             getLogger().warning("The '" + "redspawn" + ".World" + "' world from config.yml does not exist or is not loaded !");
 				         }
+				    	}
 				    }
 				}	
 			}
@@ -298,11 +307,11 @@ public class WinterSlashMain extends JavaPlugin{
 				sender.sendMessage("No permission");
 				return true;
 			}
-			if(ftagplayers.contains(player.getName())){
-				ftagplayers.remove(player.getName());
+			if(wsplayersHM.containsValue(player)){
+				wsplayersHM.remove(player);
 				frozen.remove(player.getName());
-				ftred.remove(player.getName());
-				ftgreen.remove(player.getName());
+				wsred.remove(player.getName());
+				wsgreen.remove(player.getName());
 				player.getInventory().clear();
 				player.sendMessage(ChatColor.GREEN + "You have left the game!");
 				player.teleport(player.getWorld().getSpawnLocation());

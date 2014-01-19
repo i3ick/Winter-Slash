@@ -45,13 +45,12 @@ public class WinterSlashEvents implements Listener{
     public void onPlayerDamage(EntityDamageEvent event){
         if (event.getEntity() instanceof Player){
             Player player = (Player) event.getEntity();
-            if(plugin.ftagplayers.contains(player.getName())){
+            if(plugin.wsplayersHM.containsValue(player.getName())){
                 if(player.getHealthScale() < 6){
                     player.getLocation();
                     plugin.getConfig().set(player.getName() + ".X", player.getLocation().getBlockX());
                     plugin.getConfig().set(player.getName() + ".Y", player.getLocation().getBlockY());
                     plugin.getConfig().set(player.getName() + ".Z", player.getLocation().getBlockZ());
-                    plugin.getConfig().options().copyDefaults(true);
                     plugin.saveConfig();
                 }
 
@@ -77,7 +76,7 @@ public class WinterSlashEvents implements Listener{
         if(e instanceof Player){
             Player player = (Player) e;
             if(plugin.frozenred.contains(player.getName())){
-                if(plugin.ftred.contains(attacker)){
+                if(plugin.wsred.containsValue(attacker)){
                     if(player.getHealthScale()<4.0){
                         plugin.frozen.remove(player);
                         plugin.frozenred.remove(player);
@@ -98,7 +97,7 @@ public class WinterSlashEvents implements Listener{
         if(e instanceof Player){
             Player player = (Player) e;
             if(plugin.frozengreen.contains(player.getName())){
-                if(plugin.ftgreen.contains(attacker)){
+                if(plugin.wsgreen.containsValue(attacker)){
                     if(player.getHealthScale()<4.0){
                         plugin.frozen.remove(player);
                         plugin.frozengreen.remove(player);
@@ -125,9 +124,9 @@ public class WinterSlashEvents implements Listener{
 
 
                 //disable FF for red team
-                if(plugin.ftred.contains(victim.getName())){
+                if(plugin.wsred.containsValue(victim.getName())){
                     if(plugin.frozenred.contains(victim.getName())){
-                        if(plugin.ftred.contains(damager.getName())){
+                        if(plugin.wsred.containsValue(damager.getName())){
                             //do nothing - unfreezeing process
                         }
                         else{
@@ -136,7 +135,7 @@ public class WinterSlashEvents implements Listener{
                         }
                     }
                     else{
-                        if(plugin.ftred.contains(damager.getName())){
+                        if(plugin.wsred.containsValue(damager.getName())){
                             event.setCancelled(true);
                             //disables friendly fire
                         }
@@ -145,9 +144,9 @@ public class WinterSlashEvents implements Listener{
 
 
                 //disable FF for green team
-                else if(plugin.ftgreen.contains(victim.getName())){
+                else if(plugin.wsgreen.containsValue(victim.getName())){
                     if(plugin.frozengreen.contains(victim.getName())){
-                        if(plugin.ftgreen.contains(damager.getName())){
+                        if(plugin.wsgreen.containsValue(damager.getName())){
                             //do nothing - unfreezeing process
                         }
                         else{
@@ -156,7 +155,7 @@ public class WinterSlashEvents implements Listener{
                         }
                     }
                     else{
-                        if(plugin.ftgreen.contains(damager.getName())){
+                        if(plugin.wsgreen.containsValue(damager.getName())){
                             event.setCancelled(true);
                             //disables friendly fire
                         }
@@ -192,7 +191,7 @@ public class WinterSlashEvents implements Listener{
     @EventHandler
     public void onDisconnect(PlayerQuitEvent e){
         Player player = e.getPlayer();
-        plugin.ftagplayers.remove(player.getName());
+        plugin.wsplayersHM.remove(player.getName());
 
     }
 
@@ -233,8 +232,8 @@ public class WinterSlashEvents implements Listener{
     //blocks commands once a player is ingame
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onServerCommand(PlayerCommandPreprocessEvent e){
-        if(plugin.ftred.contains(e.getPlayer().getName())){
-            if(e.getMessage().equals("/ftl")){
+        if(plugin.wsred.containsValue(e.getPlayer())){
+            if(e.getMessage().equals("/wsl")){
                 return;
             }
             else{
@@ -243,15 +242,15 @@ public class WinterSlashEvents implements Listener{
                 }
                 else{
                     e.setCancelled(true);
-                    e.getPlayer().sendMessage(ChatColor.YELLOW + "Can't use commands while in game. Use /ftl to leave");
+                    e.getPlayer().sendMessage(ChatColor.YELLOW + "Can't use commands while in game. Use /wsl to leave");
                 }
             }
         }
 
 
-        else if(plugin.ftgreen.contains(e.getPlayer().getName())){
+        else if(plugin.wsgreen.containsValue(e.getPlayer())){
 
-            if(e.getMessage().equals("/ftl")){
+            if(e.getMessage().equals("/wsl")){
             }
 
             else{
@@ -260,7 +259,7 @@ public class WinterSlashEvents implements Listener{
                 }
                 else{
                     e.setCancelled(true);
-                    e.getPlayer().sendMessage(ChatColor.YELLOW + "Can't use commands while in game. Use /ftl to leave");
+                    e.getPlayer().sendMessage(ChatColor.YELLOW + "Can't use commands while in game. Use /wsl to leave");
                 }
             }
         }
@@ -276,7 +275,7 @@ public class WinterSlashEvents implements Listener{
     @EventHandler(priority = EventPriority.HIGHEST)
     public void checkDeath(PlayerDeathEvent event) {
         Player p = event.getEntity().getPlayer();
-        if (plugin.ftagplayers.contains(p.getName())) {
+        if (plugin.wsplayersHM.containsValue(p)) {
             p.sendMessage("testdead");
             if (isRedTeam(p)) {
                 // if player isn't frozen, freeze him. If he is, unfreeze him.
@@ -284,9 +283,9 @@ public class WinterSlashEvents implements Listener{
                     p.sendMessage("testdead");
                 }
                 else{
-                    plugin.frozenred.remove(p.getName());
+                    plugin.frozenred.remove(p);
                 }
-                if (plugin.frozengreen.size() == plugin.ftgreen.size()) {
+                if (plugin.frozengreen.size() == plugin.wsgreen.values().size()) {
                     //  end the game...
                     Bukkit.broadcastMessage(ChatColor.GREEN + "The RED team has won the game!");
                     return;
@@ -296,7 +295,7 @@ public class WinterSlashEvents implements Listener{
                 if (!isFrozenGreen(p)) {
                     plugin.frozengreen.add(p.getName());
                 }
-                if (plugin.frozenred.size() == plugin.ftred.size()) {
+                if (plugin.frozenred.size() == plugin.wsred.values().size()) {
                     //  end the game...
                     Bukkit.broadcastMessage(ChatColor.GREEN + "The GREEN team has won the game!");
                     return;
@@ -312,11 +311,11 @@ public class WinterSlashEvents implements Listener{
 
 
     public boolean isRedTeam(Player p) {
-        return plugin.ftred.contains(p);
+        return plugin.wsred.containsValue(p);
     }
 
     public boolean isGreenTeam(Player p) {
-        return plugin.ftgreen.contains(p);
+        return plugin.wsgreen.containsValue(p);
     }
 
     public boolean isFrozenGreen(Player p) {
@@ -327,19 +326,6 @@ public class WinterSlashEvents implements Listener{
         return plugin.frozenred.contains(p);
     }
 
-   
-    //Store death position for teleportation.
-    @EventHandler
-    public void deathpos(PlayerDeathEvent e){
-    	Player p = e.getEntity();
-    	if (plugin.ftagplayers.contains(p)){
-    		 plugin.getConfig().set(p.getName() + ".X", p.getLocation().getBlockX());
-    		 plugin.getConfig().set(p.getName() + ".Y", p.getLocation().getBlockY());
-    		 plugin.getConfig().set(p.getName() + ".Z", p.getLocation().getBlockZ());
-    		 plugin.saveConfig();
-    		
-    	}
-    }
 
 
     
@@ -354,7 +340,7 @@ public class WinterSlashEvents implements Listener{
     //teleports players back to the position where they died so they can be frozen
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent e){
-        if(plugin.ftred.contains(e.getPlayer().getName())){
+        if(plugin.wsred.containsValue(e.getPlayer())){
             String player =  e.getPlayer().getName();
             Player p =  e.getPlayer();
             if (plugin.frozenred.contains(player)){
@@ -388,7 +374,7 @@ public class WinterSlashEvents implements Listener{
 
 
 
-        else if(plugin.ftgreen.contains(e.getPlayer().getName())){
+        else if(plugin.wsgreen.containsValue(e.getPlayer())){
         	String player =  e.getPlayer().getName();
             Player p =  e.getPlayer();
             if (plugin.frozengreen.contains(player)){
