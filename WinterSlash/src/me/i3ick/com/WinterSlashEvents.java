@@ -51,6 +51,8 @@ public class WinterSlashEvents implements Listener {
     public void onPlayerMove(PlayerMoveEvent e) {
         if (plugin.frozenred.contains(e.getPlayer().getName())) {
             e.getPlayer().teleport(e.getPlayer().getLocation());
+        }else if (plugin.frozengreen.contains(e.getPlayer().getName())) {
+            e.getPlayer().teleport(e.getPlayer().getLocation());
         }
     }
 
