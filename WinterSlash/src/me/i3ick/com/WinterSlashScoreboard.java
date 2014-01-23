@@ -35,7 +35,7 @@ public class WinterSlashScoreboard {
         frozenRed = redTeam.getScore(Bukkit.getOfflinePlayer("Frozen:"));
 
         aliveGreen = greenTeam.getScore(Bukkit.getOfflinePlayer("Alive:"));
-        frozenRed = greenTeam.getScore(Bukkit.getOfflinePlayer("Frozen:"));
+        frozenGreen = greenTeam.getScore(Bukkit.getOfflinePlayer("Frozen:"));
 
         redTeam.setDisplaySlot(DisplaySlot.SIDEBAR);    //Where to put the objective
         greenTeam.setDisplaySlot(DisplaySlot.SIDEBAR);
