@@ -1,6 +1,6 @@
 name: WinterSlash
 main: me.i3ick.com.WinterSlashMain
-version: 1.0
+version: 1.3
 description: Freezetag game
 commands: 
   wsj: 
@@ -19,6 +19,11 @@ commands:
     description: "go to red"
   wslist: 
     description: "list arenas"
+  wscreate: 
+    description: "create arena"
+  wssetlobby: 
+    description: "create lobby"
+
 permissions: 
   winterslash.*: 
     description: "Gain access to all freezetag commands!"
@@ -31,6 +36,8 @@ permissions:
       freezetag.green: true
       freezetag.red: true
       freezetag.signplace: true
+      freezetag.create: true
+      freezetag.ftsetlobby: true
     default: op
   winterslashusers.*: 
     description: "Give normal players permission to play Freezetag!"
