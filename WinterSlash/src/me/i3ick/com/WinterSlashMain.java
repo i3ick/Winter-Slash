@@ -2,6 +2,7 @@ package me.i3ick.com;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,6 +14,7 @@ import org.bukkit.WorldCreator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -36,10 +38,12 @@ public class WinterSlashMain extends JavaPlugin{
 	 public HashMap<String, Player> wsplayersHM = new HashMap<String, Player>();
 	 public HashMap<String, Player> wsred = new HashMap<String, Player>();
 	 public HashMap<String, Player> wsgreen = new HashMap<String, Player>();
+	 Map<String,ArrayList<Player>> wsredmap = new HashMap<String,ArrayList<Player>>();
+	 Map<String,ArrayList<String>> wsgreenmap = new HashMap<>();
 	 private WinterSlashScoreboard WinterSlashScoreboard;
 	 public WinterSlashScoreboard scoreboad = WinterSlashScoreboard;
 	 
-
+	 
 	
 	@Override
 	public void onDisable() {
@@ -53,6 +57,9 @@ public class WinterSlashMain extends JavaPlugin{
 	@Override
 	public void onEnable() {
 		
+		//ready config
+		final FileConfiguration config = this.getConfig();
+		
 		//load world
 		String playerWorld = this.getConfig().getString("Worlds" + ".World" );
 		getLogger().info(playerWorld);
@@ -62,7 +69,10 @@ public class WinterSlashMain extends JavaPlugin{
 		//register events
 		this.getServer().getPluginManager().registerEvents(new WinterSlashEvents(this), this);
 		WinterSlashScoreboard.init();
-
+		WinterSlashManager.getManager().loadArenas();
+		WinterSlashManager.getInstance().setup();
+	
+		
 		
 		getLogger().info("Plugin Enabled!");
 		}
@@ -103,6 +113,16 @@ public class WinterSlashMain extends JavaPlugin{
 				return true;
 			}
 			
+			if(WinterSlashManager.getInstance().getArena(arena) != null){
+				player.sendMessage(ChatColor.RED + "This arena doesn't exist");
+				return true;
+			}
+			
+			if(WinterSlashManager.getInstance().getArena(arena).isInGame()){
+				player.sendMessage(ChatColor.YELLOW + "There is a game currently running in this arena!");
+				return true;
+			}
+			
 			if(!(args.length == 1)){
 				player.sendMessage(ChatColor.YELLOW + "Proper forumalation is: /ftj <arenaname>"); ;return true;
 			}
@@ -113,47 +133,69 @@ public class WinterSlashMain extends JavaPlugin{
 				return true;
 			}
 			
-			wsplayersHM.put(args[0], player);
+			WinterSlashManager.getManager().addPlayers(player, arena);
 			player.sendMessage(ChatColor.YELLOW + "You have been put on the games waiting list.");
 			
 			
 			
 			//max player size
 			int redamount = maxplayers*2;
-			if(wsred.size() >= redamount){
+			if(wsredmap.size() >= redamount){
 				player.sendMessage(ChatColor.YELLOW + "Can't join now, game in progress");
 				return true;
 			}
 			
-			// This is the player sorter. It balances the teams so they are equal or differe by one player.
-			if(wsplayersHM.size() >= maxplayers){
-				ItemStack revivor = new ItemStack(Material.BLAZE_ROD,1);
-				ItemStack sword = new ItemStack(Material.WOOD_SWORD,1);
-				for(Player p: onlinep){
+			
+			
+			// This starts the game
+			  if(wsplayersHM.size() >= maxplayers){
+				  
+				  //saves player location
+				  
+						 this.getConfig().set("PlayerData." + player.getName() + ".X", player.getLocation().getBlockX());
+				         this.getConfig().set("PlayerData." + player.getName() + ".Y", player.getLocation().getBlockY());
+				         this.getConfig().set("PlayerData." + player.getName() + ".Z", player.getLocation().getBlockZ());
+				         this.getConfig().set("PlayerData." + player.getName() + ".Yaw", player.getLocation().getYaw());
+				         this.getConfig().set("PlayerData." + player.getName() + ".Pitch", player.getLocation().getPitch());
+				         this.getConfig().set("PlayerData." + player.getName() + ".World", Bukkit.getName());
+				         this.getConfig().set("PlayerData." + player.getName() + ".World", Bukkit.getName());
+				         this.getConfig().options().copyDefaults(true);
+				         this.saveConfig();
+				  
+				  //initiates arena manager
+				  WinterSlashManager.getManager().startArena(arena);
+				  ItemStack revivor = new ItemStack(Material.BLAZE_ROD,1);
+				  ItemStack sword = new ItemStack(Material.WOOD_SWORD,1);
+				  
+				  
+				/*	for(Player p: onlinep){
 					if(wsplayersHM.containsKey(arena)){
 						if (wsplayersHM.containsValue(p)){
 						
 
 						WinterSlashScoreboard boardmanager = new WinterSlashScoreboard(this);
-						boardmanager.aliveRed.setScore(wsred.values().size());
-						boardmanager.aliveGreen.setScore(wsgreen.values().size());
+						boardmanager.aliveRed.setScore(wsredmap.get(arena).size());
+						boardmanager.aliveGreen.setScore(wsgreenmap.get(arena).size());
 						
-						if(wsred.values().size()>wsgreen.size()){
-							wsgreen.put(arena, player);
+						if(wsredmap.values().size()>wsgreenmap.size()){
+							wsgreenmap.get(arena).add(player.getName());
+
 							p.sendMessage("green");
 							player.setScoreboard(boardmanager.board);
+							
 							//add player to green team
 
 						}
-						else if(wsgreen.values().size()>wsred.size()){
-							wsred.put(arena, p);
+						else if(wsgreenmap.values().size()>wsredmap.size()){
+							wsredmap.get(arena).add(player.getName());
+							wsredmap.put(arena, p);
 							p.sendMessage("red");
 							player.setScoreboard(boardmanager.board);
 							//add player to red team
 
 						}
 						else{
-							wsred.put(arena, p);
+							wsredmap.get(arena).add(player.getName());
 							p.sendMessage("red");
 							player.setScoreboard(boardmanager.board);
 							
@@ -161,14 +203,14 @@ public class WinterSlashMain extends JavaPlugin{
 						}
 					}
 				}	
-				}
+				} */
 
 
-				
+				/*
 				//teleporting to green spawn
 				for(Player p: Bukkit.getOnlinePlayers()){
-				    if(wsgreen.containsKey(arena)){
-				    	if(wsgreen.containsValue(player)){
+				    if(wsgreenmapmap.containsKey(arena)){
+				    	if(wsgreenmapmap.containsValue(player)){
 				    	 int greenspawnX = this.getConfig().getInt("ArenaList." + args[0] + ".greenspawn" + ".X");
 				         int greenspawnY = this.getConfig().getInt("ArenaList." + args[0] + ".greenspawn" + ".Y");
 				         int greenspawnZ = this.getConfig().getInt("ArenaList." + args[0] + ".greenspawn" + ".Z");
@@ -219,8 +261,8 @@ public class WinterSlashMain extends JavaPlugin{
 				         }
 				    }
 				}
-				    else if(wsred.containsKey(arena)){
-				    	if(wsred.containsValue(player)){
+				    else if(wsredmap.containsKey(arena)){
+				    	if(wsredmap.containsValue(player)){
 
 				    	//teleporting to red spawn
 				    	 int redspawnX = this.getConfig().getInt("ArenaList." + args[0] + ".redspawn" + ".X");
@@ -273,7 +315,7 @@ public class WinterSlashMain extends JavaPlugin{
 				         }
 				    	}
 				    }
-				}	
+				}	*/
 			}
 		}
 		}
@@ -296,7 +338,7 @@ public class WinterSlashMain extends JavaPlugin{
 			}
 		}
 			else{
-				player.sendMessage(ChatColor.YELLOW + "Use correct command format!");
+				player.sendMessage(ChatColor.YELLOW + "Use correct command format: /wspn <number>");
 			}
 		}
 		
@@ -307,12 +349,13 @@ public class WinterSlashMain extends JavaPlugin{
 				sender.sendMessage("No permission");
 				return true;
 			}
+			String arena = args[0];
 			if(wsplayersHM.containsValue(player)){
 				wsplayersHM.remove(player);
 				frozen.remove(player.getName());
-				wsred.remove(player.getName());
-				wsgreen.remove(player.getName());
-				player.getInventory().clear();
+				wsredmap.remove(player.getName());
+				wsgreenmap.remove(player.getName());
+				WinterSlashManager.getManager().removePlayer(player, arena);
 				player.sendMessage(ChatColor.GREEN + "You have left the game!");
 				player.teleport(player.getWorld().getSpawnLocation());
 				return true;
@@ -324,33 +367,46 @@ public class WinterSlashMain extends JavaPlugin{
 		}
 
 		
+		//save lobby spawn
+				else if(cmd.getName().equalsIgnoreCase("wssetlobby")){
+					if(!sender.hasPermission("freezetag.ftsetlobby")){
+						sender.sendMessage("No permission");
+						return true;
+					}
+				
+					 this.getConfig().set("Lobby" + ".X", player.getLocation().getBlockX());
+			            this.getConfig().set("Lobby" + ".Y", player.getLocation().getBlockY());
+			            this.getConfig().set("Lobby" + ".Z", player.getLocation().getBlockZ());
+			            this.getConfig().set("Lobby" + ".Yaw", player.getLocation().getYaw());
+			            this.getConfig().set("Lobby" + ".Pitch", player.getLocation().getPitch());
+			            this.getConfig().set("Lobby" + ".World", Bukkit.getName());
+			            this.getConfig().set("Worlds" + ".World", Bukkit.getName());
+			            this.getConfig().options().copyDefaults(true);
+			   		    this.saveConfig();
+		    	        player.sendMessage(ChatColor.YELLOW + "Lobby location saved successfully");
+		    	        
+
+				}
+		
+		
 		//save red spawn
 		else if(cmd.getName().equalsIgnoreCase("wssetred")){
 			if(!sender.hasPermission("freezetag.ftsetred")){
 				sender.sendMessage("No permission");
 				return true;
 			}
+		
 			
-			if(args.length == 1){
-				if(!(isInt(args[0]))){
-			 this.getConfig().set("ArenaList." + args[0] + ".redspawn" + ".X", player.getLocation().getBlockX());
-	            this.getConfig().set("ArenaList." + args[0] + ".redspawn" + ".Y", player.getLocation().getBlockY());
-	            this.getConfig().set("ArenaList." + args[0] +".redspawn" + ".Z", player.getLocation().getBlockZ());
-	            this.getConfig().set("ArenaList." + args[0] + ".redspawn" + ".Yaw", player.getLocation().getYaw());
-	            this.getConfig().set("ArenaList." + args[0] + ".redspawn" + ".Pitch", player.getLocation().getPitch());
-	            this.getConfig().set("ArenaList." + args[0] + ".redspawn" + ".World", Bukkit.getName());
+			 this.getConfig().set("Redspawn" + ".X", player.getLocation().getBlockX());
+	            this.getConfig().set("Redspawn" + ".Y", player.getLocation().getBlockY());
+	            this.getConfig().set("Redspawn" + ".Z", player.getLocation().getBlockZ());
+	            this.getConfig().set("Redspawn" + ".Yaw", player.getLocation().getYaw());
+	            this.getConfig().set("Redspawn" + ".Pitch", player.getLocation().getPitch());
+	            this.getConfig().set("Redspawn" + ".World", Bukkit.getName());
 	            this.getConfig().set("Worlds" + ".World", Bukkit.getName());
 	            this.getConfig().options().copyDefaults(true);
 	   		    this.saveConfig();
-    	        player.sendMessage(ChatColor.YELLOW + "Red Spawn saved successfully");    
-				}
-				else{
-					player.sendMessage(ChatColor.RED + "Arena can't be an integer!");
-				}
-			}
-			else{
-				player.sendMessage("Name the arana to set the spawn in: /wssetred <arena>");
-			}
+    	        player.sendMessage(ChatColor.YELLOW + "Red Spawn saved successfully");
 		}
 		
 		//save green spawn
@@ -360,95 +416,88 @@ public class WinterSlashMain extends JavaPlugin{
 				return true;
 			}
 			
-			if(args.length == 1){
-				if(!(isInt(args[0]))){
-			 this.getConfig().set("ArenaList." + args[0] + ".greenspawn" + ".X", player.getLocation().getBlockX());
-	            this.getConfig().set("ArenaList." + args[0] + ".greenspawn" + ".Y", player.getLocation().getBlockY());
-	            this.getConfig().set("ArenaList." + args[0] + ".greenspawn" + ".Z", player.getLocation().getBlockZ());
-	            this.getConfig().set("ArenaList." + args[0] + ".greenspawn" + ".Yaw", player.getLocation().getYaw());
-	            this.getConfig().set("ArenaList." + args[0] + ".greenspawn" + ".Pitch", player.getLocation().getPitch());
-	            this.getConfig().set("ArenaList." + args[0] + ".greenspawn" + ".World", Bukkit.getName());
+
+			 this.getConfig().set("Greenspawn" + ".X", player.getLocation().getBlockX());
+	            this.getConfig().set("Greenspawn" + ".Y", player.getLocation().getBlockY());
+	            this.getConfig().set("Greenspawn" + ".Z", player.getLocation().getBlockZ());
+	            this.getConfig().set("Greenspawn" + ".Yaw", player.getLocation().getYaw());
+	            this.getConfig().set("Greenspawn" + ".Pitch", player.getLocation().getPitch());
+	            this.getConfig().set("Worlds" + ".World", Bukkit.getName());
 	            this.getConfig().options().copyDefaults(true);
 	   		    this.saveConfig();
     	        player.sendMessage(ChatColor.YELLOW + "Green Spawn saved successfully");   
-				}
-    	        else{
-					player.sendMessage(ChatColor.RED + "Arena can't be an integer!");
-				}
-			}
-			else{
-				player.sendMessage("Name the arana to set the spawn in: /wssetred <arena>");
-			}
 		}
+
 		
-		//go to red spawn
-		else if(cmd.getName().equalsIgnoreCase("red")){
-			if(!sender.hasPermission("freezetag.red")){
+		
+		
+		// Creating the arena
+		else if (cmd.getName().equalsIgnoreCase("wscreate")){
+			if(!sender.hasPermission("freezetag.create")){
 				sender.sendMessage("No permission");
 				return true;
 			}
-			if(args.length == 1){
-			 int redspawnX = this.getConfig().getInt("ArenaList." + args[0] + ".redspawn" + ".X");
-	         int redspawnY = this.getConfig().getInt("ArenaList." + args[0] + ".redspawn" + ".Y");
-	         int redspawnZ = this.getConfig().getInt("ArenaList." + args[0] + ".redspawn" + ".Z");
-	         int redspawnYaw = this.getConfig().getInt("ArenaList." + args[0] + ".redspawn" + ".Yaw");
-	         int redspawnPitch = this.getConfig().getInt("ArenaList." + args[0] + ".redspawn" + ".Pitch");
-	         String playerWorld = this.getConfig().getString("ArenaList." + args[0] + ".redspawn" + ".World");
-	         
-	         World world = Bukkit.getWorld(playerWorld);
-
-	         if(world != null)
-	         {
-	        	 Location redspawn = new Location((World) world, redspawnX, redspawnY, redspawnZ, redspawnYaw, redspawnPitch);
-	        	 player.teleport(redspawn);
-	         }
-	         else
-	         {
-	        	 Bukkit.getServer().createWorld(new WorldCreator(playerWorld).environment(World.Environment.NORMAL));
-	             getLogger().warning("The '" + "redspawn" + ".World" + "' world from config.yml does not exist or is not loaded !");
-	         }
-		}
-		else{
-			player.sendMessage(ChatColor.YELLOW + "Use correct format: /green <arenaname>");
-			return true;
-		}
-   
-		}	
-		
-		//Go to green spawn
-		
-		else if(cmd.getName().equalsIgnoreCase("green")){
-			if(!sender.hasPermission("freezetag.green")){
-				sender.sendMessage("No permission");
-				return true;
-			}
-			if(args.length == 1){
-			 int greenspawnX = this.getConfig().getInt("ArenaList." + args[0] + ".greenspawn" + ".X");
-	         int greenspawnY = this.getConfig().getInt("ArenaList." + args[0] + ".greenspawn" + ".Y");
-	         int greenspawnZ = this.getConfig().getInt("ArenaList." + args[0] + ".greenspawn" + ".Z");
-	         int greenspawnYaw = this.getConfig().getInt("ArenaList." + args[0] + ".greenspawn" + ".Yaw");
-	         int greenspawnPitch = this.getConfig().getInt("ArenaList." + args[0] + ".greenspawn" + ".Pitch");
-	         String playerWorld = this.getConfig().getString("ArenaList." + args[0] + ".greenspawn" + ".World");
-	         
-	         World world = Bukkit.getWorld(playerWorld);
-
-	         if(world != null)
-	         {
-	        	 Location greenspawn = new Location((World) world, greenspawnX, greenspawnY, greenspawnZ, greenspawnYaw, greenspawnPitch);
-	        	 player.teleport(greenspawn);
-	         }
-	         else
-	         {
-	        	 Bukkit.getServer().createWorld(new WorldCreator(playerWorld).environment(World.Environment.NORMAL));
-	             getLogger().warning("The '" + "greenspawn" + ".World" + "' world from config.yml does not exist or is not loaded !");
-	         }
-			}
-			else{
-				player.sendMessage(ChatColor.YELLOW + "Use correct format: /green <arenaname>");
-				return true;
-			}
-	   
 			
+			if(args.length == 2){
+				String arenaName = args[0].toString();
+				if(!isInt(args[1])){
+					player.sendMessage(ChatColor.RED + args[1] + " is not a number!");
+					return true;
+				}
+				
+				int maxPlayers = Integer.parseInt(args[1]);
+				
+				// load player location
+				int playerX = this.getConfig().getInt("PlayerData." + player.getName() + ".X");
+		         int playerY = this.getConfig().getInt("PlayerData." + player.getName() + ".Y");
+		         int playerZ = this.getConfig().getInt("PlayerData." + player.getName() + ".Z");
+		         int playerYaw = this.getConfig().getInt("PlayerData." + player.getName() + ".Yaw");
+		         int playerPitch = this.getConfig().getInt("PlayerData." + player.getName() + ".Pitch");
+				
+				// load lobby information
+				int lobbyX = this.getConfig().getInt("lobby" + ".X");
+		         int lobbyY = this.getConfig().getInt("lobby" + ".Y");
+		         int lobbyZ = this.getConfig().getInt("lobby" + ".Z");
+		         int lobbyYaw = this.getConfig().getInt("lobby" + ".Yaw");
+		         int lobbyPitch = this.getConfig().getInt("lobby" + ".Pitch");
+				
+				// load red spawn information
+				int redspawnX = this.getConfig().getInt("Redspawn" + ".X");
+		         int redspawnY = this.getConfig().getInt("Redspawn" + ".Y");
+		         int redspawnZ = this.getConfig().getInt("Redspawn" + ".Z");
+		         int redspawnYaw = this.getConfig().getInt("Redspawn" + ".Yaw");
+		         int redspawnPitch = this.getConfig().getInt("Redspawn" + ".Pitch");
+		         String playerWorld = this.getConfig().getString("Redspawn" + ".World"); 
+				
+				// load green spawn information
+				 int greenspawnX = this.getConfig().getInt("Greenspawn" + ".X");
+		         int greenspawnY = this.getConfig().getInt("Greenpawn" + ".Y");
+		         int greenspawnZ = this.getConfig().getInt("Greenspawn" + ".Z");
+		         int greenspawnYaw = this.getConfig().getInt("Greenspawn" +".Yaw");
+		         int greenspawnPitch = this.getConfig().getInt("Greenspawn" + ".Pitch");
+		         
+		         // Get current World
+		         World world = Bukkit.getWorld(playerWorld);
+
+		         if(world != null)
+		         {
+		        	 Location endLocation = new Location((World) world, playerX, playerY, playerZ, playerYaw, playerPitch);
+		        	 Location joinLocation = new Location((World) world, lobbyX, lobbyY, lobbyZ, lobbyYaw, lobbyPitch);
+		        	 Location greenspawn = new Location((World) world, redspawnX, redspawnY, redspawnZ, redspawnYaw, redspawnPitch);
+		        	 Location redspawn = new Location((World) world, greenspawnX, greenspawnY, greenspawnZ, greenspawnYaw, greenspawnPitch);
+		        	 WinterSlashManager.getManager().createArena(arenaName, joinLocation, redspawn, greenspawn, endLocation, maxPlayers);
+		        	 
+		        	 
+		         }
+		         else
+		         {
+		        	 Bukkit.getServer().createWorld(new WorldCreator(playerWorld).environment(World.Environment.NORMAL));
+		             getLogger().warning("The '" + "greenspawn" + ".World" + "' world from config.yml does not exist or is not loaded !");
+		         }
+				}	
+			else{
+				player.sendMessage(ChatColor.YELLOW + ("Please use the following format: /wscreate <arenaname>"));
+			}
 		}
 		
 		
@@ -460,5 +509,6 @@ public class WinterSlashMain extends JavaPlugin{
 		
 		return false;
 	}
+
 		
 }
