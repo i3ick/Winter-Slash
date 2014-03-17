@@ -23,12 +23,15 @@ commands:
     description: "create arena"
   wssetlobby: 
     description: "create lobby"
+  wsfs: 
+    description: "force start"
 
 permissions: 
   winterslash.*: 
     description: "Gain access to all freezetag commands!"
     children: 
       freezetag.ftj: true
+      freezetag.fs: true
       freezetag.ftpn: true
       freezetag.ftl: true
       freezetag.ftsetgreen: true
