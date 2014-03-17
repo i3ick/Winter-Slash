@@ -21,9 +21,7 @@ public class WinterSlashManager{
 	
 	WinterSlashMain plugin2;
 	 
-	public WinterSlashManager(WinterSlashMain instance) {
-	plugin2 = instance;
-	}
+	
 	
 	// This Arena manager is a modified version of JPG200's code: https://forums.bukkit.org/threads/tut-create-a-minigame-with-arena-names.193908/
 	
@@ -34,7 +32,11 @@ public class WinterSlashManager{
     private WinterSlashMain plugin;
 
     
-	private WinterSlashManager() { }
+	private WinterSlashManager() {
+		//here we make sure that the plugin2 variable and plugin variable have the correct value
+		this.plugin = WinterSlashMain.getInstance();
+		this.plugin2 = WinterSlashMain.getInstance(); 
+		}
 	private static WinterSlashManager am = new WinterSlashManager();
 	public static WinterSlashManager getInstance() {
 		return am;

@@ -43,6 +43,14 @@ public class WinterSlashMain extends JavaPlugin{
 	 private WinterSlashScoreboard WinterSlashScoreboard;
 	 public WinterSlashScoreboard scoreboad = WinterSlashScoreboard;
 	 
+	 // We create a Variable of this Plugin so we can use it lateron to retrieve the Config
+	 private static WinterSlashMain main;
+	 
+	 
+	 // Now we do a getter Method so we can retrieve the Variable
+	 public static WinterSlashMain getInstance() {
+	 	return main;
+	 }
 	 
 	
 	@Override
@@ -76,10 +84,7 @@ public class WinterSlashMain extends JavaPlugin{
 		
 		getLogger().info("Plugin Enabled!");
 		}
-	
-	
 
-	
 			
 	public static boolean isInt(String sender) {
 	    try {
