@@ -106,6 +106,10 @@ public class WinterSlashMain extends JavaPlugin{
 		//join game
 		if(cmd.getName().equalsIgnoreCase("wsj")){
 			 int maxplayers = this.getConfig().getInt("Settings" + ".playernumber");
+			 if(args.length < 1){
+				 player.sendMessage(ChatColor.RED + "You didn't specify arena name");
+				 return true;
+			 }
 			String arena = args[0].toString();
 			//checks permission
 			if(!sender.hasPermission("freezetag.ftj")){
@@ -113,10 +117,11 @@ public class WinterSlashMain extends JavaPlugin{
 				return true;
 			}
 			
-			if(WinterSlashManager.getInstance().getArena(arena) != null){
+			if(WinterSlashManager.getInstance().getArena(arena) == null){
 				player.sendMessage(ChatColor.RED + "This arena doesn't exist");
 				return true;
 			}
+
 			
 			if(WinterSlashManager.getInstance().getArena(arena).isInGame()){
 				player.sendMessage(ChatColor.YELLOW + "There is a game currently running in this arena!");
