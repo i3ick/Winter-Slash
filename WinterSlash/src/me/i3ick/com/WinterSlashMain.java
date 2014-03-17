@@ -43,6 +43,9 @@ public class WinterSlashMain extends JavaPlugin{
 	 private WinterSlashScoreboard WinterSlashScoreboard;
 	 public WinterSlashScoreboard scoreboad = WinterSlashScoreboard;
 	 
+	 // here we create a variable for the WinterSlashManager
+	 private WinterSlashManager winterManager;
+	 
 	 
 	
 	@Override
@@ -59,6 +62,9 @@ public class WinterSlashMain extends JavaPlugin{
 		
 		//ready config
 		final FileConfiguration config = this.getConfig();
+		
+		// Here we initialise the WinterSlashManager
+		winterManager = new WinterSlashmanager(this);
 		
 		//load world
 		String playerWorld = this.getConfig().getString("Worlds" + ".World" );
@@ -80,6 +86,11 @@ public class WinterSlashMain extends JavaPlugin{
 	
 
 	
+	
+	// Here we create a getter for the winterManager that we going to use lateron in WinterSlashManager getInstance();
+	public WinterSlashManager() {
+		return winterManager;
+	}
 			
 	public static boolean isInt(String sender) {
 	    try {
