@@ -68,6 +68,9 @@ public class WinterSlashMain extends JavaPlugin{
 		//ready config
 		final FileConfiguration config = this.getConfig();
 		
+		// we assign "main" variable a value
+		this.main = this;
+		
 		//load world
 		String playerWorld = this.getConfig().getString("Worlds" + ".World" );
 		getLogger().info(playerWorld);
