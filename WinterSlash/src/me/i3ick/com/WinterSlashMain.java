@@ -113,12 +113,12 @@ public class WinterSlashMain extends JavaPlugin{
         
 		//join game
 		if(cmd.getName().equalsIgnoreCase("wsj")){
-			 int maxplayers = this.getConfig().getInt("Settings" + ".playernumber");
 			 if(args.length < 1){
 				 player.sendMessage(ChatColor.RED + "You didn't specify arena name");
 				 return true;
 			 }
 			String arena = args[0].toString();
+			int maxplayers = this.getConfig().getInt("arenas." + arena + ".maxPlayers");
 			//checks permission
 			if(!sender.hasPermission("freezetag.ftj")){
 				sender.sendMessage("No permission");
@@ -137,7 +137,8 @@ public class WinterSlashMain extends JavaPlugin{
 			}
 			
 			if(!(args.length == 1)){
-				player.sendMessage(ChatColor.YELLOW + "Proper forumalation is: /ftj <arenaname>"); ;return true;
+				player.sendMessage(ChatColor.YELLOW + "Proper forumalation is: /ftj <arenaname>"); 
+				return true;
 			}
 			else{
 
@@ -146,11 +147,12 @@ public class WinterSlashMain extends JavaPlugin{
 				return true;
 			}
 			
-			WinterSlashManager.getManager().addPlayers(player, arena);
 			player.sendMessage(ChatColor.YELLOW + "You have been put on the games waiting list.");
+			WinterSlashManager.getManager().addPlayers(player, arena);
+
 			
 			
-			
+
 			//max player size
 			int redamount = maxplayers*2;
 			if(wsredmap.size() >= redamount){
@@ -176,7 +178,7 @@ public class WinterSlashMain extends JavaPlugin{
 				         this.saveConfig();
 				  
 				  //initiates arena manager
-				  WinterSlashManager.getManager().startArena(arena);
+				  
 				  ItemStack revivor = new ItemStack(Material.BLAZE_ROD,1);
 				  ItemStack sword = new ItemStack(Material.WOOD_SWORD,1);
 				  
@@ -356,6 +358,8 @@ public class WinterSlashMain extends JavaPlugin{
 		}
 		
 		
+		
+		
 		//leaving the game
 		else if(cmd.getName().equalsIgnoreCase("wsl")){
 			if(!sender.hasPermission("freezetag.ftl")){
@@ -378,6 +382,21 @@ public class WinterSlashMain extends JavaPlugin{
 			}
 			
 		}
+		
+		//Force starting the arena
+				else if(cmd.getName().equalsIgnoreCase("wsfs")){
+					if(!sender.hasPermission("freezetag.fs")){
+						sender.sendMessage("No permission");
+						return true;
+					}
+					String arena = args[0].toString();
+					if(args.length == 1){
+						WinterSlashManager.getManager().startArena(arena);
+					}
+					else{
+						player.sendMessage(ChatColor.RED + "Please use the following format: /wsfs <arenaname>");
+					}
+				}
 
 		
 		//save lobby spawn
