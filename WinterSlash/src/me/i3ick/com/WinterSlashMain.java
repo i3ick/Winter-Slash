@@ -73,14 +73,20 @@ public class WinterSlashMain extends JavaPlugin{
 		
 		//load world
 		String playerWorld = this.getConfig().getString("Worlds" + ".World" );
-		getLogger().info(playerWorld);
+		getLogger().info("Worldname:" + playerWorld);
 		getServer().createWorld(new WorldCreator(playerWorld));
 
-				
+		
 		//register events
 		this.getServer().getPluginManager().registerEvents(new WinterSlashEvents(this), this);
-		WinterSlashScoreboard.init();
-		WinterSlashManager.getManager().loadArenas();
+		
+		
+		/* this isn't working, why?
+		 WinterSlashScoreboard.init();
+		*/
+		
+		
+		WinterSlashManager.getInstance().loadArenas();
 		WinterSlashManager.getInstance().setup();
 	
 		
@@ -367,18 +373,18 @@ public class WinterSlashMain extends JavaPlugin{
 				return true;
 			}
 			String arena = args[0];
-			if(wsplayersHM.containsValue(player)){
-				wsplayersHM.remove(player);
+			
+			if(args.length == 1){
+				/*wsplayersHM.remove(player);
 				frozen.remove(player.getName());
 				wsredmap.remove(player.getName());
-				wsgreenmap.remove(player.getName());
+				wsgreenmap.remove(player.getName()); */
 				WinterSlashManager.getManager().removePlayer(player, arena);
 				player.sendMessage(ChatColor.GREEN + "You have left the game!");
-				player.teleport(player.getWorld().getSpawnLocation());
 				return true;
 			}
 			else{
-				player.sendMessage(ChatColor.GREEN + "You are not in a game!");
+				player.sendMessage(ChatColor.RED + "Please use the following format: /wsl <arenaname>");
 			}
 			
 		}
@@ -528,7 +534,7 @@ public class WinterSlashMain extends JavaPlugin{
 		         }
 				}	
 			else{
-				player.sendMessage(ChatColor.YELLOW + ("Please use the following format: /wscreate <arenaname>"));
+				player.sendMessage(ChatColor.YELLOW + ("Please use the following format: /wscreate <arenaname> <playernumber>"));
 			}
 		}
 		
