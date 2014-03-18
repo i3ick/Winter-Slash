@@ -43,13 +43,11 @@ public class WinterSlashMain extends JavaPlugin{
 	 private WinterSlashScoreboard WinterSlashScoreboard;
 	 public WinterSlashScoreboard scoreboad = WinterSlashScoreboard;
 	 
-	 // We create a Variable of this Plugin so we can use it lateron to retrieve the Config
-	 private static WinterSlashMain main;
 	 
 	 
 	 // Now we do a getter Method so we can retrieve the Variable
 	 public static WinterSlashMain getInstance() {
-	 	return main;
+	 	return this;
 	 }
 	 
 	
@@ -67,9 +65,6 @@ public class WinterSlashMain extends JavaPlugin{
 		
 		//ready config
 		final FileConfiguration config = this.getConfig();
-		
-		// we assign "main" variable a value
-		this.main = this;
 		
 		//load world
 		String playerWorld = this.getConfig().getString("Worlds" + ".World" );
