@@ -265,24 +265,24 @@ public class WinterSlashManager{
 	World world = Bukkit.getWorld("arenas." + keys + ".world");
 	 
 	//Arena names are keys
-	double joinX = config.getDouble("arenas." + "keys." + "joinX");
-	double joinY = config.getDouble("arenas." + "keys." + "joinY");
-	double joinZ = config.getDouble("arenas." + "keys." + "joinZ");
+	double joinX = config.getDouble("arenas." + keys + "." + "joinX");
+	double joinY = config.getDouble("arenas." + keys + "." + "joinY");
+	double joinZ = config.getDouble("arenas." + keys + "." + "joinZ");
 	Location joinLocation = new Location(world, joinX, joinY, joinZ);
 	
-	double greenX = config.getDouble("arenas." + "keys." + "greenX");
-	double greenY = config.getDouble("arenas." + "keys." + "greenY");
-	double greenZ = config.getDouble("arenas." + "keys." + "greenZ"); 
+	double greenX = config.getDouble("arenas." + keys + "." + "greenX");
+	double greenY = config.getDouble("arenas." + keys + "." + "greenY");
+	double greenZ = config.getDouble("arenas." + keys + "." + "greenZ"); 
 	Location greenLocation = new Location(world, greenX, greenY, greenZ);
 	
-	double redX = config.getDouble("arenas." + "keys." + "redX");
-	double redY = config.getDouble("arenas." + "keys." + "redY");
-	double redZ = config.getDouble("arenas." + "keys." + "redZ"); 
+	double redX = config.getDouble("arenas." + keys + "." + "redX");
+	double redY = config.getDouble("arenas." + keys + "." + "redY");
+	double redZ = config.getDouble("arenas." + keys + "." + "redZ"); 
 	Location redLocation = new Location(world, redX, redY, redZ);
 	 
-	double endX = config.getDouble("arenas." + "keys." + "endX");
-	double endY = config.getDouble("arenas." + "keys." + "endX");
-	double endZ = config.getDouble("arenas." + "keys." + "endX");
+	double endX = config.getDouble("arenas." + keys + "." + "endX");
+	double endY = config.getDouble("arenas." + keys + "." + "endX");
+	double endZ = config.getDouble("arenas." + keys + "." + "endX");
 	Location endLocation = new Location(world, endX, endY, endZ);
 	 
 	int maxPlayers = plugin2.getConfig().getInt("arenas." + keys + ".maxPlayers");
