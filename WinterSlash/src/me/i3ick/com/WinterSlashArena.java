@@ -8,12 +8,16 @@ import me.i3ick.com.WinterSlashManager.Team;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 
 public class WinterSlashArena {
 	
 
+	
+	
 	//A list of all the Arena Objects
 	public static ArrayList<WinterSlashArena> arenaObjects = new ArrayList<WinterSlashArena>();
 
@@ -58,8 +62,7 @@ public class WinterSlashArena {
 	private ArrayList<String> frozen = new ArrayList<String>();
 	private ArrayList<String> frozenred = new ArrayList<String>();
 	private ArrayList<String> frozengreen = new ArrayList<String>();
-	private ArrayList<String> ftag = new ArrayList<String>();
-	private ArrayList<String> beaconlist = new ArrayList<String>();
+
 	private ArrayList<String> wsplayers = new ArrayList<String>();
 	private ArrayList<String> wsred = new ArrayList<String>();
 	private ArrayList<String> wsgreen = new ArrayList<String>();
@@ -76,21 +79,23 @@ public class WinterSlashArena {
 	//Now for a Constructor:
 	public WinterSlashArena (String arenaName, Location joinLocation, Location redLocation, Location greenLocation, Location endLocation, int maxPlayers) { 
 	
-		//Lets initalize it all:
-	this.name = arenaName;
+		//Lets initialize it all:
+
+    //directly
+    this.name = arenaName;
 	this.joinLocation = joinLocation;
 	this.redspawn = redLocation;
 	this.greenspawn = greenLocation;
 	this.endLocation = endLocation;
 	this.maxPlayers = maxPlayers;
+	
+	
 	 
 	//Now lets add this object to the list of objects:
 	arenaObjects.add(this);
 	 
 	}
-	 
-
-
+	
 
 	public Location getJoinLocation() {
 	return this.joinLocation;
