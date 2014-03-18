@@ -21,7 +21,7 @@ public class WinterSlashScoreboard {
     public Score aliveRed, aliveGreen, frozenRed, frozenGreen;
 
     public WinterSlashScoreboard (WinterSlashMain WinterSlashMain){
-        plugin= WinterSlashMain;
+        plugin = WinterSlashMain;
         init(); //just to keep the constructor clean.
     }
 
