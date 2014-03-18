@@ -152,13 +152,13 @@ public class WinterSlashMain extends JavaPlugin{
 
 			
 			
-
+			/*
 			//max player size
 			int redamount = maxplayers*2;
 			if(wsredmap.size() >= redamount){
 				player.sendMessage(ChatColor.YELLOW + "Can't join now, game in progress");
 				return true;
-			}
+			} */
 			
 			
 			
@@ -487,11 +487,11 @@ public class WinterSlashMain extends JavaPlugin{
 		         int playerPitch = this.getConfig().getInt("PlayerData." + player.getName() + ".Pitch");
 				
 				// load lobby information
-				int lobbyX = this.getConfig().getInt("lobby" + ".X");
-		         int lobbyY = this.getConfig().getInt("lobby" + ".Y");
-		         int lobbyZ = this.getConfig().getInt("lobby" + ".Z");
-		         int lobbyYaw = this.getConfig().getInt("lobby" + ".Yaw");
-		         int lobbyPitch = this.getConfig().getInt("lobby" + ".Pitch");
+				int lobbyX = this.getConfig().getInt("Lobby" + ".X");
+		         int lobbyY = this.getConfig().getInt("Lobby" + ".Y");
+		         int lobbyZ = this.getConfig().getInt("Lobby" + ".Z");
+		         int lobbyYaw = this.getConfig().getInt("Lobby" + ".Yaw");
+		         int lobbyPitch = this.getConfig().getInt("Lobby" + ".Pitch");
 				
 				// load red spawn information
 				int redspawnX = this.getConfig().getInt("Redspawn" + ".X");
