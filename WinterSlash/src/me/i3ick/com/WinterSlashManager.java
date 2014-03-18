@@ -7,15 +7,12 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.craftbukkit.libs.org.ibex.nestedvm.util.Seekable.File;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
+
+
 
 public class WinterSlashManager{
 	
@@ -96,8 +93,11 @@ public class WinterSlashManager{
 	int playersLeft = arena.getMaxPlayers() - arena.getPlayers().size(); //How many players needed to start
 
 	//Send the arena's players a message
+	if(!(arena.getPlayers().size() == arena.getMaxPlayers())){
 	arena.sendMessage(ChatColor.BLUE + player.getName() + " has joined the arena! We only need " + playersLeft + " to start the game!");
-	 
+	player.teleport(arena.getJoinLocation());
+	return;
+	}
 	 
 	if (playersLeft == 0) { //IF there are 0 players needed to start the game
 	startArena(arenaName); //Start the arena, see the method way below :)
@@ -133,8 +133,8 @@ public class WinterSlashManager{
 	//Teleport out
 	player.teleport(arena.getEndLocation());
 	 
-	//remove the player to the arena list
-	arena.getPlayers().remove(player.getName()); //Removes the players name to the arena
+	//remove the player from the arena list
+	arena.getPlayers().remove(player.getName()); 
 	 
 	//Send the arena's players a message
 	arena.sendMessage(ChatColor.BLUE + player.getName() + " Disconnected! There are " + arena.getPlayers().size() + "players left!");
@@ -143,7 +143,7 @@ public class WinterSlashManager{
 	 
 	 
 	} else { //Specified arena doesn't have the player, send the player an error message
-	player.sendMessage(ChatColor.YELLOW + "This player is not in this arena");
+	player.sendMessage(ChatColor.YELLOW + "You are not ingame!");
 	 
 	}
 	 
@@ -291,15 +291,20 @@ public class WinterSlashManager{
 	WinterSlashArena arena = new WinterSlashArena(keys, joinLocation, redLocation, greenLocation, endLocation, 17);
 	 
 	}
+	WinterSlashMain.getInstance().getLogger().info("Arenas are now loaded!");
 	}
 	 
 
 	
 	
-	//Our final method, create arena!
+//	CREATING AND SAVING THE ARENA
+//	CREATING AND SAVING THE ARENA
+//	CREATING AND SAVING THE ARENA
+	
+	
 	public void createArena(String arenaName, Location joinLocation, Location redLocation, Location greenLocation, Location endLocation, int maxPlayers) {
 	 
-	//Now, lets create an arena object to represent it:
+	//Object to represent the arena
 	WinterSlashArena arena = new WinterSlashArena(arenaName, joinLocation, redLocation, greenLocation, endLocation, maxPlayers);
 	 
 	FileConfiguration config = plugin2.getConfig();
