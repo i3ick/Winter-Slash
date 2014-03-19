@@ -40,11 +40,14 @@ public class WinterSlashMain extends JavaPlugin{
 	// We create a Variable of this Plugin so we can use it lateron to retrieve the Config
 		 private static WinterSlashMain main;
 	 
-	 // Now we do a getter Method so we can retrieve the Variable
-	 public static WinterSlashMain getInstance() {
-	 	return main;
-	 }
-	 
+
+	 public static JavaPlugin INSTANCE;
+ 	 public static JavaPlugin getInstance() {
+ 	 	return INSTANCE;
+      }
+ 	 {
+ 	 INSTANCE = this;
+  	 }
 	
 	@Override
 	public void onDisable() {

@@ -11,12 +11,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.plugin.java.JavaPlugin;
 
 
 
 public class WinterSlashManager{
 	
-	WinterSlashMain plugin2;
+
 	 
 	
 	
@@ -26,7 +27,8 @@ public class WinterSlashManager{
 
 
 
-    private WinterSlashMain plugin;
+	  private JavaPlugin plugin;
+	    JavaPlugin plugin2;
 
     
 	private WinterSlashManager() {
