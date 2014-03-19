@@ -269,7 +269,8 @@ public class WinterSlashManager{
 	 
 		
 	//Get values, make arena object
-	World world = Bukkit.getWorld("arenas." + keys + ".world");
+	String name = config.getString("Worlds" + ".World");
+	World world = Bukkit.getWorld(name);
 	 
 	//Arena names are keys
 	double joinX = config.getDouble("arenas." + keys + "." + "joinX");
@@ -295,7 +296,7 @@ public class WinterSlashManager{
 	int maxPlayers = plugin2.getConfig().getInt("arenas." + keys + ".maxPlayers");
 	 
 	//Now lets create an object to represent it:
-	WinterSlashArena arena = new WinterSlashArena(keys, joinLocation, redLocation, greenLocation, endLocation, 17);
+	WinterSlashArena arenaobject = new WinterSlashArena(keys, joinLocation, redLocation, greenLocation, endLocation, maxPlayers);
 	 
 	}
 	WinterSlashMain.getInstance().getLogger().info("Arenas are now loaded!");
@@ -313,7 +314,8 @@ public class WinterSlashManager{
 	 
 	//Object to represent the arena
 	WinterSlashArena arena = new WinterSlashArena(arenaName, joinLocation, redLocation, greenLocation, endLocation, maxPlayers);
-	 
+	
+	
 	FileConfiguration config = plugin2.getConfig();
 	
 	config.set("arenas." + arenaName, null); //Set its name

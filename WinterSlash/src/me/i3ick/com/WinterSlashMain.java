@@ -3,10 +3,8 @@ package me.i3ick.com;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -15,19 +13,15 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
-import org.bukkit.scoreboard.Team;
+
 
 
 public class WinterSlashMain extends JavaPlugin{
     	  
-    	 // Arrays
+		// Arrays
 	 public ArrayList<String> frozen = new ArrayList<String>();
 	 public ArrayList<String> frozenred = new ArrayList<String>();
 	 public ArrayList<String> frozengreen = new ArrayList<String>();
@@ -43,11 +37,12 @@ public class WinterSlashMain extends JavaPlugin{
 	 private WinterSlashScoreboard WinterSlashScoreboard;
 	 public WinterSlashScoreboard scoreboad = WinterSlashScoreboard;
 	 
-	 
+	// We create a Variable of this Plugin so we can use it lateron to retrieve the Config
+		 private static WinterSlashMain main;
 	 
 	 // Now we do a getter Method so we can retrieve the Variable
 	 public static WinterSlashMain getInstance() {
-	 	return this;
+	 	return main;
 	 }
 	 
 	
@@ -66,6 +61,9 @@ public class WinterSlashMain extends JavaPlugin{
 		//ready config
 		final FileConfiguration config = this.getConfig();
 		
+		// we assign "main" variable a value
+				this.main = this;
+		
 		//load world
 		String playerWorld = this.getConfig().getString("Worlds" + ".World" );
 		getLogger().info("Worldname:" + playerWorld);
@@ -76,9 +74,9 @@ public class WinterSlashMain extends JavaPlugin{
 		this.getServer().getPluginManager().registerEvents(new WinterSlashEvents(this), this);
 		
 		
-		/* this isn't working, why?
+		/*
 		 WinterSlashScoreboard.init();
-		*/
+ 		*/
 		
 		
 		WinterSlashManager.getInstance().loadArenas();
@@ -106,7 +104,11 @@ public class WinterSlashMain extends JavaPlugin{
 		Player[] onlinep = Bukkit.getServer().getOnlinePlayers();
 	
 		if(cmd.getName().equalsIgnoreCase("wslist")){
-			ConfigurationSection sec = getConfig().getConfigurationSection("ArenaList");
+			if(getConfig().getConfigurationSection("arenas") == null){
+				player.sendMessage(ChatColor.RED + "There are no arenas.");
+				return true;
+			}
+			ConfigurationSection sec = getConfig().getConfigurationSection("arenas");
 			String arenas = sec.getValues(false).keySet().toString();
 			player.sendMessage(ChatColor.GREEN + arenas);
 		}
@@ -519,13 +521,14 @@ public class WinterSlashMain extends JavaPlugin{
 		        	 Location greenspawn = new Location((World) world, redspawnX, redspawnY, redspawnZ, redspawnYaw, redspawnPitch);
 		        	 Location redspawn = new Location((World) world, greenspawnX, greenspawnY, greenspawnZ, greenspawnYaw, greenspawnPitch);
 		        	 WinterSlashManager.getManager().createArena(arenaName, joinLocation, redspawn, greenspawn, endLocation, maxPlayers);
+		        	 player.sendMessage(ChatColor.GREEN + (args[0] + " successfully created!"));
 		        	 
 		        	 
 		         }
 		         else
 		         {
 		        	 Bukkit.getServer().createWorld(new WorldCreator(playerWorld).environment(World.Environment.NORMAL));
-		             getLogger().warning("The '" + "greenspawn" + ".World" + "' world from config.yml does not exist or is not loaded !");
+		             getLogger().warning("The '" + world + "' world from config.yml does not exist or is not loaded !");
 		         }
 				}	
 			else{
