@@ -257,10 +257,17 @@ public class WinterSlashManager{
 	  
 	public void loadArenas() {
 	 
+		
 		FileConfiguration config = plugin2.getConfig();
-	
-	for (String keys: config.getConfigurationSection("arenas").getKeys(false)) { //For each arena name in the arena file
+
+		if(config.getConfigurationSection("arenas") == null){
+			WinterSlashMain.getInstance().getLogger().info("There are no arenas.");
+			return;
+		}
+		
+	for (String keys: config.getConfigurationSection("arenas").getKeys(false)) {//For each arena name in the arena file
 	 
+		
 	//Get values, make arena object
 	World world = Bukkit.getWorld("arenas." + keys + ".world");
 	 
