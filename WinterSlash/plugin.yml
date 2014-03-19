@@ -1,0 +1,50 @@
+name: WinterSlash
+main: me.i3ick.com.WinterSlashMain
+version: 1.3
+description: Freezetag game
+commands: 
+  wsj: 
+    description: "Join the game"
+  wsl: 
+    description: "Leave the game"
+  wssetgreen: 
+    description: "set green spawn"
+  wssetred: 
+    description: "set red spawn"
+  wspn: 
+    description: "set the number of players"  
+  green: 
+    description: "go to green"
+  red: 
+    description: "go to red"
+  wslist: 
+    description: "list arenas"
+  wscreate: 
+    description: "create arena"
+  wssetlobby: 
+    description: "create lobby"
+  wsfs: 
+    description: "force start"
+
+permissions: 
+  winterslash.*: 
+    description: "Gain access to all freezetag commands!"
+    children: 
+      freezetag.ftj: true
+      freezetag.fs: true
+      freezetag.ftpn: true
+      freezetag.ftl: true
+      freezetag.ftsetgreen: true
+      freezetag.ftsetred: true
+      freezetag.green: true
+      freezetag.red: true
+      freezetag.signplace: true
+      freezetag.create: true
+      freezetag.ftsetlobby: true
+    default: op
+  winterslashusers.*: 
+    description: "Give normal players permission to play Freezetag!"
+    children: 
+      freezetag.ftj: true
+      freezetag.ftl: true
+    default: op
