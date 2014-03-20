@@ -173,6 +173,42 @@ public class WinterSlashEvents implements Listener {
         plugin.wsplayersHM.remove(player.getName());
 
     }
+    
+    
+
+    Material[] REVIVEITEMS = {Material.BLAZE_ROD,Material.BONE};
+        
+    //Prevent reviving tools from causing damage
+    	@EventHandler(priority = EventPriority.NORMAL,ignoreCancelled = true)
+    	public void revividamage(EntityDamageByEntityEvent event)
+    	{
+    		if (!(event.getEntity() instanceof Player)) {
+    			return;
+    		}
+    		if (!(event.getDamager() instanceof Player)) {
+   			return;
+    		}
+    		//ranged attacks ignored, they have arrow proxy as damage source
+    		
+    		Player px = (Player) event.getDamager();
+    		
+    		//obviously we don't want to cancel tool damage outside arena
+    		//if player not registered to PlayerWrapper - he outside arena
+    		if (WSA_PlayerWrapperImpl.getWrapperContainer(px) == null) return;
+    		Material m = px.getItemInHand().getType();
+    		
+    		for (Material xm : REVIVEITEMS)
+    		{
+    			if (xm == m)
+    			{
+    				event.setCancelled(true);
+    				return;
+    			}
+    		}
+    		
+   
+    		
+    	}
 
     //Pack-a-Punch logic
     @EventHandler
@@ -191,6 +227,7 @@ public class WinterSlashEvents implements Listener {
         }
     }
 
+    //Block damage while in air
     //Think i fixed
     @EventHandler
     public void onJump(EntityDamageByEntityEvent e) {
@@ -295,7 +332,25 @@ public class WinterSlashEvents implements Listener {
     public boolean isFrozenRed(Player p) {
         return plugin.frozenred.contains(p);
     }
-
+    
+    
+    //datastorage layout
+    public int isFrozen(Player p)
+    	{
+    		return WSA_PlayerWrapperImpl.getWrapperContainer(p).Frozed;
+    	}
+    	
+    	public boolean isTeamRed(Player p)
+    	{
+    		return WSA_PlayerWrapperImpl.getWrapperContainer(p).Team == WSA_PlayerWrapperImpl.TEAM_RED;
+    	}
+    	
+    	public boolean isTeamRedAndFrozen(Player p)
+    	{
+    		return WSA_PlayerWrapperImpl.getWrapperContainer(p).Team == WSA_PlayerWrapperImpl.TEAM_RED
+    			&& WSA_PlayerWrapperImpl.getWrapperContainer(p).Frozed != 0;
+    	}
+    
 
     // RESPAWN EVENTS
     // RESPAWN EVENTS

@@ -41,9 +41,23 @@ public class WinterSlashArena {
 		return players.get(p.getName());
 	}
 	
+	@Deprecated
 	public void addPlayer(Player p){
 		players.put(p.getName(), LesserTeam());
 	}
+	
+	
+	// sample of wrapper allocation
+	public void xaddPlayer(Player p)
+	 	{
+	 		new WSA_PlayerWrapperImpl(p,xLesserTeam());
+	 	}
+	 	
+	 	int xLesserTeam()
+	 	{
+	 		return 0; /** Teams must be stored just like players - single hashmap and data, when implemented
+	 		there is no need if iterations each time, just reading size will be ok*/
+	 	}
 	
 	private Team LesserTeam(){
 		int red =0,  green =0;
