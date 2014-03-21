@@ -123,18 +123,34 @@ public class WinterSlashManager{
 	 
 	//A method for removing players
 	public void removePlayer(Player player, String arenaName) {
+		FileConfiguration config = plugin2.getConfig();
 	 
 	if (getArena(arenaName) != null) { 
 	 
 	WinterSlashArena arena = getArena(arenaName);
 	 
 	if (arena.getPlayers().contains(player.getName())) { //If the arena has the player already
-	 
 	player.getInventory().clear();
-	 
+	
+	// load world
+	
+	String name = config.getString("Worlds" + ".World");
+	World world = Bukkit.getWorld(name);
+	
+	// load player location
+	
+	int playerX = config.getInt("PlayerData." + player.getName() + ".X");
+    int playerY = config.getInt("PlayerData." + player.getName() + ".Y");
+    int playerZ = config.getInt("PlayerData." + player.getName() + ".Z");
+    int playerYaw = config.getInt("PlayerData." + player.getName() + ".Yaw");
+    int playerPitch = config.getInt("PlayerData." + player.getName() + ".Pitch");
+    Location out = new Location((World) world, playerX, playerY, playerZ, playerYaw, playerPitch);
+	
+    
 	//Teleport out
-	player.teleport(arena.getEndLocation());
-	 
+	player.teleport(out);
+	WinterSlashMain.getInstance().getLogger().info("Inventory cleared and player teleported out of arena");
+	
 	//remove the player from the arena list
 	arena.getPlayers().remove(player.getName()); 
 	 

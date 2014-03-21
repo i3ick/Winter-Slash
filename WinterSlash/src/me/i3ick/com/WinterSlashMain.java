@@ -135,6 +135,11 @@ public class WinterSlashMain extends JavaPlugin{
 				player.sendMessage(ChatColor.RED + "This arena doesn't exist");
 				return true;
 			}
+			
+			if(WinterSlashManager.getManager().getArena(arena).getPlayers().contains(player.getName())){
+				player.sendMessage(ChatColor.YELLOW + "You are already in this arena!");
+				return true;
+			}
 
 			
 			if(WinterSlashManager.getInstance().getArena(arena).isInGame()){
@@ -147,41 +152,28 @@ public class WinterSlashMain extends JavaPlugin{
 				return true;
 			}
 			else{
-
-			if(wsplayersHM.containsKey(player)){
-				player.sendMessage(ChatColor.GREEN + "You are already ingame, waiting for more players...");
-				return true;
-			}
-			
 			player.sendMessage(ChatColor.YELLOW + "You have been put on the games waiting list.");
-			WinterSlashManager.getManager().addPlayers(player, arena);
 
+			  //saves player location
+			  
+			 this.getConfig().set("PlayerData." + player.getName() + ".X", player.getLocation().getBlockX());
+	         this.getConfig().set("PlayerData." + player.getName() + ".Y", player.getLocation().getBlockY());
+	         this.getConfig().set("PlayerData." + player.getName() + ".Z", player.getLocation().getBlockZ());
+	         this.getConfig().set("PlayerData." + player.getName() + ".Yaw", player.getLocation().getYaw());
+	         this.getConfig().set("PlayerData." + player.getName() + ".Pitch", player.getLocation().getPitch());
+	         this.getConfig().set("PlayerData." + player.getName() + ".World", Bukkit.getName());
+	         this.getConfig().set("PlayerData." + player.getName() + ".World", Bukkit.getName());
+	         this.getConfig().options().copyDefaults(true);
+	         this.saveConfig();
 			
-			
-			/*
-			//max player size
-			int redamount = maxplayers*2;
-			if(wsredmap.size() >= redamount){
-				player.sendMessage(ChatColor.YELLOW + "Can't join now, game in progress");
-				return true;
-			} */
+	         //adds the player to the game
+	         WinterSlashManager.getManager().addPlayers(player, arena);
+	
 			
 			
 			
 			// This starts the game
 			  if(wsplayersHM.size() >= maxplayers){
-				  
-				  //saves player location
-				  
-						 this.getConfig().set("PlayerData." + player.getName() + ".X", player.getLocation().getBlockX());
-				         this.getConfig().set("PlayerData." + player.getName() + ".Y", player.getLocation().getBlockY());
-				         this.getConfig().set("PlayerData." + player.getName() + ".Z", player.getLocation().getBlockZ());
-				         this.getConfig().set("PlayerData." + player.getName() + ".Yaw", player.getLocation().getYaw());
-				         this.getConfig().set("PlayerData." + player.getName() + ".Pitch", player.getLocation().getPitch());
-				         this.getConfig().set("PlayerData." + player.getName() + ".World", Bukkit.getName());
-				         this.getConfig().set("PlayerData." + player.getName() + ".World", Bukkit.getName());
-				         this.getConfig().options().copyDefaults(true);
-				         this.saveConfig();
 				  
 				  //initiates arena manager
 				  
