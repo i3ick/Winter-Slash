@@ -79,7 +79,8 @@ public class WinterSlashManager{
 	if (!arena.isFull()) { //If the arena is not full
 	if (!arena.isInGame()) { //If there is no game in progress
 		player.getInventory().clear(); //Clear the players inventory
-		
+		arena.SetFrozen(player.getName());
+		arena.GetSign().add(player.getName());
 		
 
 	//Teleport to the arena lobby
@@ -91,12 +92,15 @@ public class WinterSlashManager{
 	
 	//Add the player to the arena list
 	arena.getPlayers().add(player.getName()); //Add the players name to the arena
+	
+	//Add to game array
+	arena.SetGamers(player.getName());
 	 
 	int playersLeft = arena.getMaxPlayers() - arena.getPlayers().size(); //How many players needed to start
 
 	//Send the arena's players a message
 	if(!(arena.getPlayers().size() == arena.getMaxPlayers())){
-	arena.sendMessage(ChatColor.BLUE + player.getName() + " has joined the arena! We only need " + playersLeft + " to start the game!");
+	arena.sendMessage(ChatColor.DARK_PURPLE + player.getName() + " has joined the arena! We only need " + playersLeft + " to start the game!");
 	player.teleport(arena.getJoinLocation());
 	return;
 	}
@@ -132,6 +136,9 @@ public class WinterSlashManager{
 	if (arena.getPlayers().contains(player.getName())) { //If the arena has the player already
 	player.getInventory().clear();
 	
+	//Remove from game array
+	arena.RemoveGamers(player.getName());
+	
 	// load world
 	
 	String name = config.getString("Worlds" + ".World");
@@ -149,7 +156,6 @@ public class WinterSlashManager{
     
 	//Teleport out
 	player.teleport(out);
-	WinterSlashMain.getInstance().getLogger().info("Inventory cleared and player teleported out of arena");
 	
 	//remove the player from the arena list
 	arena.getPlayers().remove(player.getName()); 
@@ -194,11 +200,13 @@ public class WinterSlashManager{
 			Player pl = Bukkit.getPlayer(p);
 			if(arena.ifPlayerIsRed(pl)){
 				// debug message
+				arena.RedTeamAdd(pl.getName());
 				pl.sendMessage("You are in the Red Team");
 				pl.teleport(arena.getRedSpawn());
 			}
 			else{
 				// debug message
+				arena.GreenTeamAdd(pl.getName());
 				pl.sendMessage("You are in the Green Team");
 				pl.teleport(arena.getGreenSpawn());
 			}

@@ -25,7 +25,7 @@ public class WSA_PlayerWrapperImpl
 	public int Deaths;
 	public int Kills;
 	public int Saves;
-	public int Frozed; //boolean and int in java same size
+	public int Frozen; //boolean and int in java same size
 	public int Whatever;
 	//you can store as many fields on every player as you want
 	

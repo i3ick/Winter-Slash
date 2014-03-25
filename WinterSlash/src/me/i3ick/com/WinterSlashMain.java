@@ -3,6 +3,7 @@ package me.i3ick.com;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -37,7 +38,7 @@ public class WinterSlashMain extends JavaPlugin{
 	 private WinterSlashScoreboard WinterSlashScoreboard;
 	 public WinterSlashScoreboard scoreboad = WinterSlashScoreboard;
 	 
-	// We create a Variable of this Plugin so we can use it lateron to retrieve the Config
+	// We create a Variable of this Plugin so we can use it later on to retrieve the Config
 		 private static WinterSlashMain main;
 	 
 
@@ -181,66 +182,17 @@ public class WinterSlashMain extends JavaPlugin{
 				  ItemStack sword = new ItemStack(Material.WOOD_SWORD,1);
 				  
 				  
-				/*	for(Player p: onlinep){
-					if(wsplayersHM.containsKey(arena)){
-						if (wsplayersHM.containsValue(p)){
-						
 
+				  
+						/*
 						WinterSlashScoreboard boardmanager = new WinterSlashScoreboard(this);
 						boardmanager.aliveRed.setScore(wsredmap.get(arena).size());
 						boardmanager.aliveGreen.setScore(wsgreenmap.get(arena).size());
+						*/
 						
-						if(wsredmap.values().size()>wsgreenmap.size()){
-							wsgreenmap.get(arena).add(player.getName());
-
-							p.sendMessage("green");
-							player.setScoreboard(boardmanager.board);
-							
-							//add player to green team
-
-						}
-						else if(wsgreenmap.values().size()>wsredmap.size()){
-							wsredmap.get(arena).add(player.getName());
-							wsredmap.put(arena, p);
-							p.sendMessage("red");
-							player.setScoreboard(boardmanager.board);
-							//add player to red team
-
-						}
-						else{
-							wsredmap.get(arena).add(player.getName());
-							p.sendMessage("red");
-							player.setScoreboard(boardmanager.board);
-							
-							//add player to red team
-						}
-					}
-				}	
-				} */
-
-
-				/*
-				//teleporting to green spawn
-				for(Player p: Bukkit.getOnlinePlayers()){
-				    if(wsgreenmapmap.containsKey(arena)){
-				    	if(wsgreenmapmap.containsValue(player)){
-				    	 int greenspawnX = this.getConfig().getInt("ArenaList." + args[0] + ".greenspawn" + ".X");
-				         int greenspawnY = this.getConfig().getInt("ArenaList." + args[0] + ".greenspawn" + ".Y");
-				         int greenspawnZ = this.getConfig().getInt("ArenaList." + args[0] + ".greenspawn" + ".Z");
-				         int greenspawnYaw = this.getConfig().getInt("ArenaList." + args[0] + ".greenspawn" + ".Yaw");
-				         int greenspawnPitch = this.getConfig().getInt("ArenaList." + args[0] + ".greenspawn" + ".Pitch");
-				         String playerWorld = this.getConfig().getString("ArenaList." + args[0] + ".greenspawn" + ".World");
-				         
-				         World world = Bukkit.getWorld(playerWorld);
-
-				         if(world != null)
-				         {
-				        	 Location greenspawn = new Location((World) world, greenspawnX, greenspawnY, greenspawnZ, greenspawnYaw, greenspawnPitch);
-				        	 p.teleport(greenspawn);
-				        	 p.sendMessage(ChatColor.GREEN + "You have joined the Green team!");
-				        	 revivor.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 3);
-							 p.getInventory().addItem(revivor);
-							 p.getInventory().addItem(sword);
+				
+						
+							/*
 							//armor
 							 ItemStack helmet = new ItemStack(Material.LEATHER_HELMET, 1);
 							 LeatherArmorMeta am = (LeatherArmorMeta)helmet.getItemMeta();
@@ -265,6 +217,8 @@ public class WinterSlashMain extends JavaPlugin{
 							 p.getInventory().setChestplate(chest);
 							 p.getInventory().setLeggings(pants);
 							 p.getInventory().setBoots(boots);
+				        	 
+				        	 
 				        	 
 				         }
 				         else
@@ -344,7 +298,7 @@ public class WinterSlashMain extends JavaPlugin{
 			if(args.length==1){
 				if(isInt(args[0])){
 					 int num = Integer.parseInt(args[0]);
-				 this.getConfig().set("Settings" + ".playernumber", num-1);
+				 this.getConfig().set("MinPlayerNumber", num);
 		         this.getConfig().options().copyDefaults(true);
 		   		 this.saveConfig();
 				 player.sendMessage(ChatColor.YELLOW + "Player number set.");
@@ -353,7 +307,7 @@ public class WinterSlashMain extends JavaPlugin{
 			else{
 				player.sendMessage(ChatColor.YELLOW + "Use correct command format: /wspn <number>");
 			}
-		}
+		} 
 		
 		
 		
@@ -364,21 +318,17 @@ public class WinterSlashMain extends JavaPlugin{
 				sender.sendMessage("No permission");
 				return true;
 			}
-			String arena = args[0];
 			
-			if(args.length == 1){
-				/*wsplayersHM.remove(player);
-				frozen.remove(player.getName());
-				wsredmap.remove(player.getName());
-				wsgreenmap.remove(player.getName()); */
-				WinterSlashManager.getManager().removePlayer(player, arena);
-				player.sendMessage(ChatColor.GREEN + "You have left the game!");
-				return true;
-			}
-			else{
-				player.sendMessage(ChatColor.RED + "Please use the following format: /wsl <arenaname>");
-			}
-			
+		    //Method for getting the arena name which contains specific player
+	        ConfigurationSection sec = WinterSlashMain.getInstance().getConfig().getConfigurationSection("arenas");
+	        for (String arenas: sec.getKeys(false)) {
+	        	WinterSlashArena arena = WinterSlashManager.getManager().getArena(arenas);
+	        	if(arena.getPlayers().contains(player.getName())){
+	        		WinterSlashManager.getManager().removePlayer(player, arena.getName());
+					player.sendMessage(ChatColor.GREEN + "You have left the game!");
+	        		return true;
+	        	}
+	        }
 		}
 		
 		//Force starting the arena
@@ -387,9 +337,21 @@ public class WinterSlashMain extends JavaPlugin{
 						sender.sendMessage("No permission");
 						return true;
 					}
-					String arena = args[0].toString();
+							
 					if(args.length == 1){
-						WinterSlashManager.getManager().startArena(arena);
+						
+						  //Method for getting the arena name which contains specific player
+				        ConfigurationSection sec = WinterSlashMain.getInstance().getConfig().getConfigurationSection("arenas");
+				        String arenan = args[0].toString();	
+				        for (String arenas: sec.getKeys(false)) {
+				        	WinterSlashArena arena = WinterSlashManager.getManager().getArena(arenas);
+				        	if(arena.getName().equals(arenan)){
+				        		WinterSlashManager.getManager().startArena(arenan);
+								player.sendMessage(ChatColor.YELLOW + "Arena " + arenan + " has been started!");
+				        		return true;
+				        	}	
+				        }
+				        player.sendMessage(ChatColor.RED + "No such arena! Do /wslist to see a list of existing arenas.");
 					}
 					else{
 						player.sendMessage(ChatColor.RED + "Please use the following format: /wsfs <arenaname>");

@@ -59,6 +59,8 @@ public class WinterSlashArena {
 	 		there is no need if iterations each time, just reading size will be ok*/
 	 	}
 	
+	 // team sorting 
+	 	
 	private Team LesserTeam(){
 		int red =0,  green =0;
 		for(String p : players.keySet()) {
@@ -73,18 +75,120 @@ public class WinterSlashArena {
 	
 	// array lists
 	private ArrayList<String> playersm = new ArrayList<String>();
-	private ArrayList<String> frozen = new ArrayList<String>();
-	private ArrayList<String> frozenred = new ArrayList<String>();
-	private ArrayList<String> frozengreen = new ArrayList<String>();
-
 	private ArrayList<String> wsplayers = new ArrayList<String>();
-	private ArrayList<String> wsred = new ArrayList<String>();
-	private ArrayList<String> wsgreen = new ArrayList<String>();
+	
+	//Frozen array
+	
+	private ArrayList<String> frozen = new ArrayList<String>();
+	public void SetFrozen(String player){
+		frozen.add(player);
+	}
 
+	public void UnsetFrozen(String player){
+		frozen.remove(player);
+	}
+	
+	
+	public ArrayList<String> GetFrozen() {
+		return frozen;
+	}
+	
+	//sign click
+	
+			private ArrayList<String> sign = new ArrayList<String>();
+			public void SetSign(String player){
+				sign.add(player);
+			}
+
+			public void ClearSign(String player){
+				sign.remove(player);
+			}
+			
+			
+			public ArrayList<String> GetSign() {
+				return sign;
+			}
+	
+	
+	//Game array
+	
+		private ArrayList<String> game = new ArrayList<String>();
+		public void SetGamers(String player){
+			game.add(player);
+		}
+
+		public void RemoveGamers(String player){
+			game.remove(player);
+		}
+		
+		
+		public ArrayList<String> GetGamers() {
+			return game;
+		}
+	
+	//red team array
+	
+	private ArrayList<String> redteam = new ArrayList<String>();
+	public void RedTeamAdd(String player){
+		redteam.add(player);
+	}
+	
+	
+	public ArrayList<String> GetRedTeam() {
+		return redteam;
+	}
+	
+	//frozen red team array
+	
+	private ArrayList<String> frozenred = new ArrayList<String>();
+	public void FrozenRedAdd(String player){
+		frozenred.add(player);
+	}
+	
+	public void FrozenRedRemove(String player){
+		frozenred.remove(player);
+	}
+	
+	
+	public ArrayList<String> GetRedFrozenTeam() {
+		return frozenred;
+	}
+	
+	//green team array
+	
+	private ArrayList<String> greenteam = new ArrayList<String>();
+	public void GreenTeamAdd(String player){
+		greenteam.add(player);
+	}
 	 
+	
+	public ArrayList<String> GetGreenTeam() {
+		return greenteam;
+	}
+	
+	//frozen green team array
+	
+	private ArrayList<String> frozengreen = new ArrayList<String>();
+	public void FrozenGreenAdd(String player){
+		frozengreen.add(player);
+	}
+	
+	public void FrozenGreenRemove(String player){
+		frozengreen.remove(player);
+	}
+	
+		
+	public ArrayList<String> GetGreenFrozenTeam() {
+	return frozengreen;
+	}
+	
+		
+		
+		
+	
 	private int maxPlayers;
-	private boolean inGame = false; //Boolean to determine if an Arena is ingame or not, automaticly make it false
-
+	private boolean inGame = false; //Boolean to determine if an Arena is in-game or not, automatically make it false
+	private boolean isFrozen = false; 
 
 
 
@@ -171,6 +275,8 @@ public class WinterSlashArena {
 	}
 	}
 	 
+	
+
 	 
 	public boolean isInGame() {
 	return inGame;
@@ -199,5 +305,7 @@ public class WinterSlashArena {
 		}
 		return false;
 		}
+
+
 
 }
