@@ -1,6 +1,6 @@
 name: WinterSlash
 main: me.i3ick.com.WinterSlashMain
-version: 1.3
+version: 1.4
 description: Freezetag game
 commands: 
   wsj: 

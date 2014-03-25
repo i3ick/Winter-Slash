@@ -74,6 +74,18 @@ public class WinterSlashMain extends JavaPlugin{
 		File configFile = new File(getDataFolder(), "config.yml");
 		   if(!configFile.exists())
 		   {
+			   this.getConfig().addDefault("Redspawn" + ".X", null);
+	           this.getConfig().addDefault("Worlds" + ".World", null);
+	           this.getConfig().addDefault("Greenspawn" + ".X", null);
+	           this.getConfig().addDefault("Lobby" + ".X", null);
+	           this.getConfig().addDefault("arenas" + ".X", null);
+	           this.getConfig().addDefault("PlayerData" + ".X", null);
+	           this.getConfig().addDefault("DeathPosition" + ".X", null);
+	           this.getConfig().addDefault("MinPlayerNumber" + ".X", null);
+	           
+	           
+	           this.getConfig().options().copyDefaults(true);
+	           this.saveConfig();
 		    saveDefaultConfig();
 		   }
 		
