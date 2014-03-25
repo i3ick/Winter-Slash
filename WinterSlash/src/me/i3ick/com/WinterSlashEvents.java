@@ -56,6 +56,9 @@ public class WinterSlashEvents implements Listener {
             Player player = (Player) event.getEntity();
             
             FileConfiguration ins = WinterSlashMain.getInstance().getConfig();
+            if(ins == null){
+        		return;
+        	}
             Logger debug = WinterSlashMain.getInstance().getLogger();
             ConfigurationSection sec = WinterSlashMain.getInstance().getConfig().getConfigurationSection("arenas");
             for (String arenas: sec.getKeys(false)) {
@@ -78,6 +81,9 @@ public class WinterSlashEvents implements Listener {
     public void onPlayerMove(PlayerMoveEvent e) {
     	
     	ConfigurationSection sec = WinterSlashMain.getInstance().getConfig().getConfigurationSection("arenas");
+    	if(sec == null){
+    		return;
+    	}
         for (String arenas: sec.getKeys(false)) {
         	WinterSlashArena arena = WinterSlashManager.getManager().getArena(arenas);
         	if(arena.getPlayers().contains(e.getPlayer().getName())){
@@ -351,6 +357,9 @@ public class WinterSlashEvents implements Listener {
     public void onServerCommand(PlayerCommandPreprocessEvent e) {
         //get arena
     	 ConfigurationSection sec = WinterSlashMain.getInstance().getConfig().getConfigurationSection("arenas");
+    	 if(sec == null){
+     		return;
+     	}
          for (String arenas: sec.getKeys(false)) {
          	WinterSlashArena arena = WinterSlashManager.getManager().getArena(arenas);
          	if(arena.getPlayers().contains(e.getPlayer().getName())){
@@ -394,6 +403,9 @@ public class WinterSlashEvents implements Listener {
         
         //Method for getting the arena name which contains specific player
         ConfigurationSection sec = WinterSlashMain.getInstance().getConfig().getConfigurationSection("arenas");
+        if(sec == null){
+    		return;
+    	}
         for (String arenas: sec.getKeys(false)) {
         	WinterSlashArena arena = WinterSlashManager.getManager().getArena(arenas);
         	if(arena.getPlayers().contains(p.getName())){
@@ -484,6 +496,9 @@ public class WinterSlashEvents implements Listener {
     public void onPlayerRespawn(PlayerRespawnEvent e){
     	Player p = e.getPlayer();
     	 ConfigurationSection sec = WinterSlashMain.getInstance().getConfig().getConfigurationSection("arenas");
+    	 if(sec == null){
+     		return;
+     	}
          for (String arenas: sec.getKeys(false)) {
          	WinterSlashArena arena = WinterSlashManager.getManager().getArena(arenas);
          	if(arena.getPlayers().contains(p.getName())){
@@ -503,11 +518,11 @@ public class WinterSlashEvents implements Listener {
                 int lastposY = ins.getInt("DeathPosition." + p.getName() + ".Y");
                 int lastposZ = ins.getInt("DeathPosition." + p.getName() + ".Z");
                 String playerWorld = plugin.getConfig().getString("Worlds" + ".World");
-                World world = Bukkit.getWorld(playerWorld);
+                String world = p.getLocation().getWorld().getName();
 
                 if(world != null)
                 {
-                    Location lastpos = new Location((World) world, lastposX, lastposY, lastposZ);
+                    Location lastpos = new Location((Bukkit.getWorld(world)), lastposX, lastposY, lastposZ);
                     e.setRespawnLocation(lastpos);
                 }
                 else
@@ -534,11 +549,11 @@ public class WinterSlashEvents implements Listener {
                 int lastposY = ins.getInt("DeathPosition." + p.getName() + ".Y");
                 int lastposZ = ins.getInt("DeathPosition." + p.getName() + ".Z");
                 String playerWorld = ins.getString("Worlds" + ".World");
-                World world = Bukkit.getWorld(playerWorld);
+                String world = p.getLocation().getWorld().getName();
 
                 if(world != null)
                 {
-                    Location lastpos = new Location((World) world, lastposX, lastposY, lastposZ);
+                    Location lastpos = new Location(Bukkit.getWorld(world), lastposX, lastposY, lastposZ);
                     e.setRespawnLocation(lastpos);
                     p.teleport(lastpos);
                 }

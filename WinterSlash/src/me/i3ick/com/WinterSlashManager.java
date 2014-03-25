@@ -142,7 +142,8 @@ public class WinterSlashManager{
 	// load world
 	
 	String name = config.getString("Worlds" + ".World");
-	World world = Bukkit.getWorld(name);
+	String world = player.getLocation().getWorld().getName();
+	
 	
 	// load player location
 	
@@ -151,7 +152,7 @@ public class WinterSlashManager{
     int playerZ = config.getInt("PlayerData." + player.getName() + ".Z");
     int playerYaw = config.getInt("PlayerData." + player.getName() + ".Yaw");
     int playerPitch = config.getInt("PlayerData." + player.getName() + ".Pitch");
-    Location out = new Location((World) world, playerX, playerY, playerZ, playerYaw, playerPitch);
+    Location out = new Location(Bukkit.getWorld(world), playerX, playerY, playerZ, playerYaw, playerPitch);
 	
     
 	//Teleport out

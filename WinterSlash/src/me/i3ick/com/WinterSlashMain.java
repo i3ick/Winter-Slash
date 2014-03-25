@@ -1,5 +1,6 @@
 package me.i3ick.com;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -70,8 +71,13 @@ public class WinterSlashMain extends JavaPlugin{
 		
 		//load world
 		String playerWorld = this.getConfig().getString("Worlds" + ".World" );
+		File configFile = new File(getDataFolder(), "config.yml");
+		   if(!configFile.exists())
+		   {
+		    saveDefaultConfig();
+		   }
+		
 		getLogger().info("Worldname:" + playerWorld);
-		getServer().createWorld(new WorldCreator(playerWorld));
 
 		
 		//register events
@@ -469,14 +475,14 @@ public class WinterSlashMain extends JavaPlugin{
 		         int greenspawnPitch = this.getConfig().getInt("Greenspawn" + ".Pitch");
 		         
 		         // Get current World
-		         World world = Bukkit.getWorld(playerWorld);
+		         String world = player.getLocation().getWorld().getName();
 
 		         if(world != null)
 		         {
-		        	 Location endLocation = new Location((World) world, playerX, playerY, playerZ, playerYaw, playerPitch);
-		        	 Location joinLocation = new Location((World) world, lobbyX, lobbyY, lobbyZ, lobbyYaw, lobbyPitch);
-		        	 Location greenspawn = new Location((World) world, redspawnX, redspawnY, redspawnZ, redspawnYaw, redspawnPitch);
-		        	 Location redspawn = new Location((World) world, greenspawnX, greenspawnY, greenspawnZ, greenspawnYaw, greenspawnPitch);
+		        	 Location endLocation = new Location(Bukkit.getWorld(world), playerX, playerY, playerZ, playerYaw, playerPitch);
+		        	 Location joinLocation = new Location(Bukkit.getWorld(world), lobbyX, lobbyY, lobbyZ, lobbyYaw, lobbyPitch);
+		        	 Location greenspawn = new Location(Bukkit.getWorld(world), redspawnX, redspawnY, redspawnZ, redspawnYaw, redspawnPitch);
+		        	 Location redspawn = new Location(Bukkit.getWorld(world), greenspawnX, greenspawnY, greenspawnZ, greenspawnYaw, greenspawnPitch);
 		        	 WinterSlashManager.getManager().createArena(arenaName, joinLocation, redspawn, greenspawn, endLocation, maxPlayers);
 		        	 player.sendMessage(ChatColor.GREEN + (args[0] + " successfully created!"));
 		        	 
