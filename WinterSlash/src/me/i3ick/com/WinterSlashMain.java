@@ -70,7 +70,6 @@ public class WinterSlashMain extends JavaPlugin{
 				this.main = this;
 		
 		//load world
-		String playerWorld = this.getConfig().getString("Worlds" + ".World" );
 		File configFile = new File(getDataFolder(), "config.yml");
 		   if(!configFile.exists())
 		   {
@@ -84,10 +83,14 @@ public class WinterSlashMain extends JavaPlugin{
 	           this.getConfig().addDefault("MinPlayerNumber" + ".X", null);
 	           
 	           
+	           
 	           this.getConfig().options().copyDefaults(true);
 	           this.saveConfig();
 		    saveDefaultConfig();
 		   }
+		   String playerWorld = this.getConfig().getString("Worlds" + ".World" );
+		   WorldCreator c = new WorldCreator(playerWorld);
+			c.createWorld();
 		
 		getLogger().info("Worldname:" + playerWorld);
 
@@ -119,6 +122,14 @@ public class WinterSlashMain extends JavaPlugin{
 	    return true;
 	}
 	
+	public static boolean isInventoryEmpty(Player p){
+		for(ItemStack item : p.getInventory().getContents())
+		{
+		if(item != null)
+		return true;
+		}
+		return false;
+		}
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String CommandLabel, String[] args){
@@ -142,6 +153,8 @@ public class WinterSlashMain extends JavaPlugin{
 				 player.sendMessage(ChatColor.RED + "You didn't specify arena name");
 				 return true;
 			 }
+			 
+			 
 			String arena = args[0].toString();
 			int maxplayers = this.getConfig().getInt("arenas." + arena + ".maxPlayers");
 			//checks permission
@@ -152,6 +165,12 @@ public class WinterSlashMain extends JavaPlugin{
 			
 			if(WinterSlashManager.getInstance().getArena(arena) == null){
 				player.sendMessage(ChatColor.RED + "This arena doesn't exist");
+				return true;
+			}
+				
+			
+			if(isInventoryEmpty(player)){
+				player.sendMessage(ChatColor.YELLOW + "Please empty your inventory!");
 				return true;
 			}
 			
@@ -375,6 +394,35 @@ public class WinterSlashMain extends JavaPlugin{
 						player.sendMessage(ChatColor.RED + "Please use the following format: /wsfs <arenaname>");
 					}
 				}
+		
+		/*
+		
+		//Force end the arena
+				else if(cmd.getName().equalsIgnoreCase("wsfe")){
+					if(!sender.hasPermission("freezetag.fs")){
+						sender.sendMessage("No permission");
+						return true;
+					}
+							
+					if(args.length == 1){
+						
+						  //Method for getting the arena name which contains specific player
+				        ConfigurationSection sec = WinterSlashMain.getInstance().getConfig().getConfigurationSection("arenas");
+				        String arenan = args[0].toString();	
+				        for (String arenas: sec.getKeys(false)) {
+				        	WinterSlashArena arena = WinterSlashManager.getManager().getArena(arenas);
+				        	if(arena.getName().equals(arenan)){
+				        		WinterSlashManager.getManager().endArena(arena.getName());
+								player.sendMessage(ChatColor.YELLOW + "Arena " + arenan + " ended!");
+				        		return true;
+				        	}	
+				        }
+				        player.sendMessage(ChatColor.RED + "No such arena! Do /wslist to see a list of existing arenas.");
+					}
+					else{
+						player.sendMessage(ChatColor.RED + "Please use the following format: /wsfs <arenaname>");
+					}
+				} */
 
 		
 		//save lobby spawn
@@ -389,8 +437,6 @@ public class WinterSlashMain extends JavaPlugin{
 			            this.getConfig().set("Lobby" + ".Z", player.getLocation().getBlockZ());
 			            this.getConfig().set("Lobby" + ".Yaw", player.getLocation().getYaw());
 			            this.getConfig().set("Lobby" + ".Pitch", player.getLocation().getPitch());
-			            this.getConfig().set("Lobby" + ".World", Bukkit.getName());
-			            this.getConfig().set("Worlds" + ".World", Bukkit.getName());
 			            this.getConfig().options().copyDefaults(true);
 			   		    this.saveConfig();
 		    	        player.sendMessage(ChatColor.YELLOW + "Lobby location saved successfully");
@@ -412,8 +458,6 @@ public class WinterSlashMain extends JavaPlugin{
 	            this.getConfig().set("Redspawn" + ".Z", player.getLocation().getBlockZ());
 	            this.getConfig().set("Redspawn" + ".Yaw", player.getLocation().getYaw());
 	            this.getConfig().set("Redspawn" + ".Pitch", player.getLocation().getPitch());
-	            this.getConfig().set("Redspawn" + ".World", Bukkit.getName());
-	            this.getConfig().set("Worlds" + ".World", Bukkit.getName());
 	            this.getConfig().options().copyDefaults(true);
 	   		    this.saveConfig();
     	        player.sendMessage(ChatColor.YELLOW + "Red Spawn saved successfully");
@@ -432,7 +476,6 @@ public class WinterSlashMain extends JavaPlugin{
 	            this.getConfig().set("Greenspawn" + ".Z", player.getLocation().getBlockZ());
 	            this.getConfig().set("Greenspawn" + ".Yaw", player.getLocation().getYaw());
 	            this.getConfig().set("Greenspawn" + ".Pitch", player.getLocation().getPitch());
-	            this.getConfig().set("Worlds" + ".World", Bukkit.getName());
 	            this.getConfig().options().copyDefaults(true);
 	   		    this.saveConfig();
     	        player.sendMessage(ChatColor.YELLOW + "Green Spawn saved successfully");   
@@ -452,6 +495,11 @@ public class WinterSlashMain extends JavaPlugin{
 				String arenaName = args[0].toString();
 				if(!isInt(args[1])){
 					player.sendMessage(ChatColor.RED + args[1] + " is not a number!");
+					return true;
+				}
+				int number = Integer.parseInt(args[1]);
+				if(number < 4){
+					player.sendMessage(ChatColor.YELLOW + " Minimum number of players is 4!");
 					return true;
 				}
 				
@@ -481,20 +529,21 @@ public class WinterSlashMain extends JavaPlugin{
 				
 				// load green spawn information
 				 int greenspawnX = this.getConfig().getInt("Greenspawn" + ".X");
-		         int greenspawnY = this.getConfig().getInt("Greenpawn" + ".Y");
+		         int greenspawnY = this.getConfig().getInt("Greenspawn" + ".Y");
 		         int greenspawnZ = this.getConfig().getInt("Greenspawn" + ".Z");
 		         int greenspawnYaw = this.getConfig().getInt("Greenspawn" +".Yaw");
 		         int greenspawnPitch = this.getConfig().getInt("Greenspawn" + ".Pitch");
 		         
 		         // Get current World
 		         String world = player.getLocation().getWorld().getName();
+		         this.getConfig().set("Worlds" + ".World", world);
 
 		         if(world != null)
 		         {
 		        	 Location endLocation = new Location(Bukkit.getWorld(world), playerX, playerY, playerZ, playerYaw, playerPitch);
 		        	 Location joinLocation = new Location(Bukkit.getWorld(world), lobbyX, lobbyY, lobbyZ, lobbyYaw, lobbyPitch);
-		        	 Location greenspawn = new Location(Bukkit.getWorld(world), redspawnX, redspawnY, redspawnZ, redspawnYaw, redspawnPitch);
-		        	 Location redspawn = new Location(Bukkit.getWorld(world), greenspawnX, greenspawnY, greenspawnZ, greenspawnYaw, greenspawnPitch);
+		        	 Location redspawn = new Location(Bukkit.getWorld(world), redspawnX, redspawnY, redspawnZ, redspawnYaw, redspawnPitch);
+		        	 Location greenspawn = new Location(Bukkit.getWorld(world), greenspawnX, greenspawnY, greenspawnZ, greenspawnYaw, greenspawnPitch);
 		        	 WinterSlashManager.getManager().createArena(arenaName, joinLocation, redspawn, greenspawn, endLocation, maxPlayers);
 		        	 player.sendMessage(ChatColor.GREEN + (args[0] + " successfully created!"));
 		        	 

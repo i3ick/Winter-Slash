@@ -1,6 +1,8 @@
 package me.i3ick.com;
 import java.util.ArrayList;
 
+import me.i3ick.com.WinterSlashManager.Team;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -68,7 +70,41 @@ public class WinterSlashManager{
 	}
 	
 
-	 
+	private ArrayList<String> reda = new ArrayList<String>();
+	
+	public void SetReda(String player){
+		reda.add(player);
+	}
+
+	public void UnsetReda(String player){
+		reda.remove(player);
+	}
+	
+	
+	public ArrayList<String> GetReda() {
+		return reda;
+	}
+	
+	
+ 	private ArrayList<String> greena = new ArrayList<String>();
+ 	
+	public void SetGreena(String player){
+		greena.add(player);
+	}
+
+	public void Unsetgreena(String player){
+		greena.remove(player);
+	}
+	
+	
+	public ArrayList<String> GetGreena() {
+		return greena;
+	}
+	
+	
+	
+	
+ 
 	 
 	//A method for adding players
 	public void addPlayers(Player player, String arenaName) {
@@ -102,6 +138,28 @@ public class WinterSlashManager{
 	if(!(arena.getPlayers().size() == arena.getMaxPlayers())){
 	arena.sendMessage(ChatColor.DARK_PURPLE + player.getName() + " has joined the arena! We only need " + playersLeft + " to start the game!");
 	player.teleport(arena.getJoinLocation());
+
+	for (String p: arena.getPlayers()) {
+		Player pl = Bukkit.getPlayer(p);
+		 	if(reda.size() > greena.size()){
+		 		greena.add(pl.getName());
+			}
+			else{
+				reda.add(pl.getName());
+			}
+		 	
+	}
+	
+	for(String p: arena.getPlayers()){
+		Player pl = Bukkit.getPlayer(p);
+			if(reda.contains(pl.getName())){
+				arena.GetHash().put(pl.getName(), Team.RED);
+			}
+			else{
+				arena.GetHash().put(pl.getName(), Team.GREEN);
+			}
+		}
+	
 	return;
 	}
 	 
@@ -138,6 +196,7 @@ public class WinterSlashManager{
 	
 	//Remove from game array
 	arena.RemoveGamers(player.getName());
+	arena.GetSign().remove(player.getName());
 	
 	// load world
 	
@@ -265,7 +324,21 @@ public class WinterSlashManager{
 	//Returning players to initial positions
 	for (String p: arena.getPlayers()) {
 	Player player = Bukkit.getPlayer(p); 
-	player.teleport(arena.getEndLocation());
+	
+	FileConfiguration config = plugin2.getConfig();
+	String name = config.getString("Worlds" + ".World");
+	String world = player.getLocation().getWorld().getName();
+	
+	int playerX = config.getInt("PlayerData." + player.getName() + ".X");
+    int playerY = config.getInt("PlayerData." + player.getName() + ".Y");
+    int playerZ = config.getInt("PlayerData." + player.getName() + ".Z");
+    int playerYaw = config.getInt("PlayerData." + player.getName() + ".Yaw");
+    int playerPitch = config.getInt("PlayerData." + player.getName() + ".Pitch");
+    Location out = new Location(Bukkit.getWorld(world), playerX, playerY, playerZ, playerYaw, playerPitch);
+	
+    
+	//Teleport out
+	player.teleport(out);
 	player.getInventory().clear(); 
 	//Remove them all from the list
 	arena.getPlayers().remove(player.getName());
@@ -296,8 +369,8 @@ public class WinterSlashManager{
 	 
 		
 	//Get values, make arena object
-	String name = config.getString("Worlds" + ".World");
-	World world = Bukkit.getWorld(name);
+	String name = config.getString("Worlds." + "World");
+	World world = Bukkit.getServer().getWorld(name);
 	 
 	//Arena names are keys
 	double joinX = config.getDouble("arenas." + keys + "." + "joinX");
@@ -324,9 +397,9 @@ public class WinterSlashManager{
 	 
 	//Now lets create an object to represent it:
 	WinterSlashArena arenaobject = new WinterSlashArena(keys, joinLocation, redLocation, greenLocation, endLocation, maxPlayers);
-	 
-	}
+	String test = greenLocation.toString();
 	WinterSlashMain.getInstance().getLogger().info("Arenas are now loaded!");
+	}
 	}
 	 
 
@@ -365,9 +438,14 @@ public class WinterSlashManager{
 	config.set(path + "endX", endLocation.getX());
 	config.set(path + "endY", endLocation.getY());
 	config.set(path + "endZ", endLocation.getZ());
-	 
+	
+	
 	config.set(path + "maxPlayers", maxPlayers);
 
 	plugin2.saveConfig();
 	}
+
+
+
+
 }

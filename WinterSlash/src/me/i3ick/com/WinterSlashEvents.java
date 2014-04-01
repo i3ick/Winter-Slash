@@ -64,7 +64,6 @@ public class WinterSlashEvents implements Listener {
             for (String arenas: sec.getKeys(false)) {
             	WinterSlashArena arena = WinterSlashManager.getManager().getArena(arenas);
             	if(arena.getPlayers().contains(player.getName())){
-            		debug.info("error1");
                     player.getLocation();
                     ins.set("DeathPosition." + player.getName() + ".X", player.getLocation().getBlockX());
                     ins.set("DeathPosition." + player.getName() + ".Y", player.getLocation().getBlockY());
@@ -243,7 +242,7 @@ public class WinterSlashEvents implements Listener {
             		String arenan = sign.getLine(2).toString();
             		WinterSlashManager.getManager().startArena(arenan);
             	}else{
-            	arena.sendMessage(ChatColor.DARK_PURPLE.toString() + playersLeft + " players still need to click the sign.");
+            	arena.sendMessage(ChatColor.DARK_PURPLE.toString() + playersLeft + " more players needed to force start.");
             	}return;}
                  	else{
                  	}
@@ -410,19 +409,21 @@ public class WinterSlashEvents implements Listener {
         	WinterSlashArena arena = WinterSlashManager.getManager().getArena(arenas);
         	if(arena.getPlayers().contains(p.getName())){
         	
-        		/*
+        		
         		// End game if green wins
         		if (arena.GetGreenFrozenTeam().size() == arena.GetGreenTeam().size()) {
                     //  end the game...
                     Bukkit.broadcastMessage(ChatColor.GREEN + "The GREEN team has won the game!");
+                    WinterSlashManager.getManager().endArena(arena.getName());
                     return;
                 }
         		// End game if red wins
                 if (arena.GetRedFrozenTeam().size() == arena.GetRedTeam().size()) {
                     //  end the game...
                     Bukkit.broadcastMessage(ChatColor.GREEN + "The RED team has won the game!");
+                    WinterSlashManager.getManager().endArena(arena.getName());
                     return;
-                } */
+                } 
         		
                 
                 if (arena.ifPlayerIsRed(p)) {

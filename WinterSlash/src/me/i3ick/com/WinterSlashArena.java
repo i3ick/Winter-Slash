@@ -11,6 +11,8 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 
 public class WinterSlashArena {
@@ -25,6 +27,18 @@ public class WinterSlashArena {
 	//Some fields we want each Arena object to store:
 	private Location redspawn, greenspawn, joinLocation, startLocation, endLocation; //Some general arena locations
 	private HashMap<String, Team> players = new HashMap<String, Team>();
+
+	public void UnsetHash(String player){
+		players.remove(player);
+	}
+	
+	
+	public HashMap<String, Team> GetHash() {
+		return players;
+	}
+	
+	
+	
 	private String name; //Arena name
 	
 	//red to red spawn, green to green spawn
@@ -41,11 +55,18 @@ public class WinterSlashArena {
 		return players.get(p.getName());
 	}
 	
-	@Deprecated
+/*
 	public void addPlayer(Player p){
-		players.put(p.getName(), LesserTeam());
+		if(WinterSlashManager.getManager().redbigger()){
+		players.put(p.getName(), Team.GREEN);
+		WinterSlashManager.getManager().SetReda(p.getName());
+		}
+		else{
+			players.put(p.getName(), Team.RED);
+			WinterSlashManager.getManager().SetGreena(p.getName());
+		}
 	}
-	
+	*/
 	
 	// sample of wrapper allocation
 	public void xaddPlayer(Player p)
@@ -58,20 +79,28 @@ public class WinterSlashArena {
 	 		return 0; /** Teams must be stored just like players - single hashmap and data, when implemented
 	 		there is no need if iterations each time, just reading size will be ok*/
 	 	}
-	
+
+	 
+	 	/*
 	 // team sorting 
-	 	
-	private Team LesserTeam(){
+	 	private ArrayList<String> reda = new ArrayList<String>();
+	 	private ArrayList<String> greena = new ArrayList<String>();
+	
+	 	private Team LesserTeam(){
 		int red =0,  green =0;
-		for(String p : players.keySet()) {
-			if(players.get(p) == Team.RED) red++;
-			else green++;
+		if(red == green){
+			red++;
+			return Team.RED;
 		}
-		if(red > green) return Team.GREEN;
-		else return Team.RED;
+		else{
+			
+			green++;
+			return Team.GREEN;
+		}
+		
 	}
 	
-	
+	*/
 	
 	// array lists
 	private ArrayList<String> playersm = new ArrayList<String>();
@@ -275,7 +304,7 @@ public class WinterSlashArena {
 	}
 	}
 	 
-	
+
 
 	 
 	public boolean isInGame() {
@@ -305,7 +334,5 @@ public class WinterSlashArena {
 		}
 		return false;
 		}
-
-
 
 }
