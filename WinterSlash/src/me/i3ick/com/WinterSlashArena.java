@@ -32,30 +32,39 @@ public class WinterSlashArena {
 		players.remove(player);
 	}
 	
+	boolean isRed(Player p) {
+		for (String p1: getPlayers()) {
+		if(reda.contains(p1)){
+			return true;
+		}
+		}
+		return isRed;
+		}
+
 	
 	public HashMap<String, Team> GetHash() {
 		return players;
 	}
 	
-	private ArrayList<String> reda = new ArrayList<String>();
-	private ArrayList<String> greena = new ArrayList<String>();
+	public ArrayList<String> reda = new ArrayList<String>();
+	public ArrayList<String> greena = new ArrayList<String>();
 	
 	public void addPlayerN(){
-		WinterSlashMain.getInstance().getLogger().info("debug 0");
 	for (String p: getPlayers()) {
-		WinterSlashMain.getInstance().getLogger().info("debug 1");
         if(reda.size() > greena.size()){
-        	WinterSlashMain.getInstance().getLogger().info("debug 2");
         	greena.add(p);
         	players.put(p, Team.GREEN);
+        	return;
         	
        }
        else{
-    	   WinterSlashMain.getInstance().getLogger().info("debug 3");
+
          	reda.add(p);
         	players.put(p, Team.RED);
+        	return;
        }
     
+        
 }
 	}
 	
@@ -129,6 +138,22 @@ public class WinterSlashArena {
 	// array lists
 	private ArrayList<String> playersm = new ArrayList<String>();
 	private ArrayList<String> wsplayers = new ArrayList<String>();
+	
+	//Alive array
+	
+	private ArrayList<String> alive = new ArrayList<String>();
+	public void SetAlive(String player){
+		frozen.add(player);
+	}
+
+	public void UnsetAlive(String player){
+		frozen.remove(player);
+	}
+	
+	
+	public ArrayList<String> GetAlive() {
+		return frozen;
+	}
 	
 	//Frozen array
 	
@@ -242,6 +267,7 @@ public class WinterSlashArena {
 	private int maxPlayers;
 	private boolean inGame = false; //Boolean to determine if an Arena is in-game or not, automatically make it false
 	private boolean isFrozen = false; 
+	private boolean isRed = false; 
 
 
 
@@ -351,9 +377,6 @@ public class WinterSlashArena {
 		for (String p1 : players.keySet()) {
 		if(players.get(p1) == Team.RED){
 			return true;
-		}
-		else{
-			return false;
 		}
 		}
 		return false;

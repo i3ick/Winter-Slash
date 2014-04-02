@@ -87,6 +87,7 @@ public class WinterSlashManager{
 		arena.GetSign().add(player.getName());
 		arena.getPlayers().add(player.getName());		//add player to the arena list
 		arena.addPlayerN();
+		arena.SetAlive(player.getName());
 		
 
 	//Teleport to the arena lobby
@@ -143,6 +144,14 @@ public class WinterSlashManager{
 	//Remove from game array
 	arena.RemoveGamers(player.getName());
 	arena.GetSign().remove(player.getName());
+	arena.greena.remove(player.getName());
+	arena.reda.remove(player.getName());
+	arena.UnsetAlive(player.getName());
+
+	//End arena if no players left
+	if(arena.GetGamers().size() == 0){
+		endArena(arena.getName());
+	}
 	
 	// load world
 	
@@ -200,23 +209,6 @@ public class WinterSlashManager{
 	//Set ingame
 	arena.setInGame(true);
 	
-	 //Teleports the players to their assigned spawns
-	for (String p: arena.getPlayers()) {
-
-			Player pl = Bukkit.getPlayer(p);
-			if(arena.ifPlayerIsRed(pl)){
-				// debug message
-				arena.RedTeamAdd(pl.getName());
-				pl.sendMessage("You are in the Red Team");
-				pl.teleport(arena.getRedSpawn());
-			}
-			else{
-				// debug message
-				arena.GreenTeamAdd(pl.getName());
-				pl.sendMessage("You are in the Green Team");
-				pl.teleport(arena.getGreenSpawn());
-			}
-	 
 	//Ready up the players
 	 ItemStack helmet = new ItemStack(Material.LEATHER_HELMET, 1);
 	 LeatherArmorMeta am = (LeatherArmorMeta)helmet.getItemMeta();
@@ -234,13 +226,29 @@ public class WinterSlashManager{
 	 ItemStack boots = new ItemStack(Material.LEATHER_BOOTS, 1);
 	 am.setColor(Color.fromRGB(0, 100, 0));
 	 boots.setItemMeta(am);
-	 
-	 
-	 //set armor
-	 Bukkit.getPlayer(p).getInventory().setHelmet(helmet);
-	 Bukkit.getPlayer(p).getInventory().setChestplate(chest);
-	 Bukkit.getPlayer(p).getInventory().setLeggings(pants);
-	 Bukkit.getPlayer(p).getInventory().setBoots(boots);
+	
+	 //Teleports the players to their assigned spawns
+	for (String p: arena.getPlayers()) {
+			Player pl = Bukkit.getPlayer(p);
+			if(arena.reda.contains(pl.getName())){
+				// debug message
+				arena.RedTeamAdd(pl.getName());
+				pl.sendMessage("You are in the Red Team");
+				pl.teleport(arena.getRedSpawn());
+			}
+			else{
+				// debug message
+				arena.GreenTeamAdd(pl.getName());
+				pl.sendMessage("You are in the Green Team");
+				pl.teleport(arena.getGreenSpawn());
+				
+				//set armor
+				 Bukkit.getPlayer(p).getInventory().setHelmet(helmet);
+				 Bukkit.getPlayer(p).getInventory().setChestplate(chest);
+				 Bukkit.getPlayer(p).getInventory().setLeggings(pants);
+				 Bukkit.getPlayer(p).getInventory().setBoots(boots);
+			}	 
+
 	 
 	 
 	 
@@ -266,11 +274,14 @@ public class WinterSlashManager{
 	 
 	//Set ingame
 	arena.setInGame(false);
+	
+	if(arena.GetGamers().size() == 0){
+		return;
+	}
 	 
 	//Returning players to initial positions
-	for (String p: arena.getPlayers()) {
+	for (String p: arena.GetAlive()) {
 	Player player = Bukkit.getPlayer(p); 
-	
 	FileConfiguration config = plugin2.getConfig();
 	String name = config.getString("Worlds" + ".World");
 	String world = player.getLocation().getWorld().getName();
@@ -322,22 +333,30 @@ public class WinterSlashManager{
 	double joinX = config.getDouble("arenas." + keys + "." + "joinX");
 	double joinY = config.getDouble("arenas." + keys + "." + "joinY");
 	double joinZ = config.getDouble("arenas." + keys + "." + "joinZ");
-	Location joinLocation = new Location(world, joinX, joinY, joinZ);
+	float jYaw = (float) config.getDouble("arenas." + keys + "." + "jYaw");
+	float jP = (float) config.getDouble("arenas." + keys + "." + "jP");
+	Location joinLocation = new Location(world, joinX, joinY, joinZ, jYaw, jP);
 	
 	double greenX = config.getDouble("arenas." + keys + "." + "greenX");
 	double greenY = config.getDouble("arenas." + keys + "." + "greenY");
 	double greenZ = config.getDouble("arenas." + keys + "." + "greenZ"); 
-	Location greenLocation = new Location(world, greenX, greenY, greenZ);
+	float gYaw = (float) config.getDouble("arenas." + keys + "." + "gYaw");
+	float gP = (float) config.getDouble("arenas." + keys + "." + "gP");
+	Location greenLocation = new Location(world, greenX, greenY, greenZ, gYaw, gP);
 	
 	double redX = config.getDouble("arenas." + keys + "." + "redX");
 	double redY = config.getDouble("arenas." + keys + "." + "redY");
-	double redZ = config.getDouble("arenas." + keys + "." + "redZ"); 
-	Location redLocation = new Location(world, redX, redY, redZ);
+	double redZ = config.getDouble("arenas." + keys + "." + "redZ");
+	float rYaw = (float) config.getDouble("arenas." + keys + "." + "rYaw");
+	float rP = (float) config.getDouble("arenas." + keys + "." + "rP");
+	Location redLocation = new Location(world, redX, redY, redZ, rYaw, rP);
 	 
 	double endX = config.getDouble("arenas." + keys + "." + "endX");
 	double endY = config.getDouble("arenas." + keys + "." + "endX");
 	double endZ = config.getDouble("arenas." + keys + "." + "endX");
-	Location endLocation = new Location(world, endX, endY, endZ);
+	float eYaw = (float) config.getDouble("arenas." + keys + "." + "eYaw");
+	float eP = (float) config.getDouble("arenas." + keys + "." + "eP");
+	Location endLocation = new Location(world, endX, endY, endZ, eYaw, eP);
 	 
 	int maxPlayers = plugin2.getConfig().getInt("arenas." + keys + ".maxPlayers");
 	 
@@ -372,18 +391,26 @@ public class WinterSlashManager{
 	config.set(path + "joinX", joinLocation.getX());
 	config.set(path + "joinY", joinLocation.getY());
 	config.set(path + "joinZ", joinLocation.getZ());
+	config.set(path + "jYaw", joinLocation.getYaw());
+	config.set(path + "jP", joinLocation.getPitch());
 	
 	config.set(path + "redX", redLocation.getX());
 	config.set(path + "redY", redLocation.getY());
 	config.set(path + "redZ", redLocation.getZ());
+	config.set(path + "rYaw", redLocation.getYaw());
+	config.set(path + "rP", joinLocation.getPitch());
 	
 	config.set(path + "greenX", greenLocation.getX());
 	config.set(path + "greenY", greenLocation.getY());
 	config.set(path + "greenZ", greenLocation.getZ());
+	config.set(path + "gYaw", greenLocation.getYaw());
+	config.set(path + "gP", joinLocation.getPitch());
 	 
 	config.set(path + "endX", endLocation.getX());
 	config.set(path + "endY", endLocation.getY());
 	config.set(path + "endZ", endLocation.getZ());
+	config.set(path + "eYaw", endLocation.getYaw());
+	config.set(path + "eP", joinLocation.getPitch());
 	
 	
 	config.set(path + "maxPlayers", maxPlayers);

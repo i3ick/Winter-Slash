@@ -89,7 +89,8 @@ public class WinterSlashEvents implements Listener {
     	
     
     	 if (!(arena.GetFrozen().contains(e.getPlayer().getName()))) {
-            e.getPlayer().teleport(e.getPlayer().getLocation());
+         /*   e.getPlayer().teleport(e.getPlayer().getLocation()); */
+            e.setCancelled(true);
         }
     	 return;
         }
@@ -408,6 +409,7 @@ public class WinterSlashEvents implements Listener {
         for (String arenas: sec.getKeys(false)) {
         	WinterSlashArena arena = WinterSlashManager.getManager().getArena(arenas);
         	if(arena.getPlayers().contains(p.getName())){
+        		arena.UnsetAlive(p.getName());
         	
         		
         		// End game if green wins
@@ -431,6 +433,7 @@ public class WinterSlashEvents implements Listener {
                     if (!arena.GetFrozen().contains(p.getName())) {
                         arena.SetFrozen(p.getName());
                         arena.FrozenRedAdd(p.getName());
+                        WinterSlashMain.getInstance().getLogger().info("Debugger_freeze 1");
                     }
                     else{
                     	arena.UnsetFrozen(p.getName());
@@ -440,6 +443,7 @@ public class WinterSlashEvents implements Listener {
                     if (!arena.GetFrozen().contains(p.getName())) {
                     	arena.SetFrozen(p.getName());
                     	arena.FrozenGreenAdd(p.getName());
+                    	WinterSlashMain.getInstance().getLogger().info("Debugger_freeze 2");
                     }
                     else{
                     	arena.UnsetFrozen(p.getName());
@@ -493,7 +497,7 @@ public class WinterSlashEvents implements Listener {
 
     //teleports players back to the position where they died so they can be frozen
     
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGHEST)
     public void onPlayerRespawn(PlayerRespawnEvent e){
     	Player p = e.getPlayer();
     	 ConfigurationSection sec = WinterSlashMain.getInstance().getConfig().getConfigurationSection("arenas");
@@ -503,6 +507,7 @@ public class WinterSlashEvents implements Listener {
          for (String arenas: sec.getKeys(false)) {
          	WinterSlashArena arena = WinterSlashManager.getManager().getArena(arenas);
          	if(arena.getPlayers().contains(p.getName())){
+         		arena.SetAlive(p.getName());
          		
          		
          		//if p is red

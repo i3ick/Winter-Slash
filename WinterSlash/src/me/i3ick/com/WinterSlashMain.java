@@ -346,6 +346,35 @@ public class WinterSlashMain extends JavaPlugin{
 			}
 		} 
 		
+		// deleting arenas
+		if(cmd.getName().equalsIgnoreCase("wsremove")){
+			if(!sender.hasPermission("freezetag.fs")){
+				sender.sendMessage("No permission");
+				return true;
+			}
+			
+			if(args.length == 1){
+				
+		        ConfigurationSection sec = WinterSlashMain.getInstance().getConfig().getConfigurationSection("arenas");
+		        String arenaName = args[0].toString();	
+		        for (String arenas: sec.getKeys(false)) {
+		        	WinterSlashArena arena = WinterSlashManager.getManager().getArena(arenas);
+		        	if(arena.getName().equals(arenaName)){
+		        		this.getConfig().getConfigurationSection("arenas").set(arenaName, null);
+		        		player.sendMessage(ChatColor.YELLOW + "Arena " + arenaName + " deleted!");
+		        		
+		        		return true;
+		        	}	
+		        }
+		        player.sendMessage(ChatColor.RED + "No such arena! Do /wslist to see a list of existing arenas.");
+			}
+			else{
+				player.sendMessage(ChatColor.RED + "Please use the following format: /wsremove <arenaname>");
+			}
+			
+			
+		}
+		
 		
 		
 		
