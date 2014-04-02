@@ -70,39 +70,7 @@ public class WinterSlashManager{
 	}
 	
 
-	private ArrayList<String> reda = new ArrayList<String>();
-	
-	public void SetReda(String player){
-		reda.add(player);
-	}
 
-	public void UnsetReda(String player){
-		reda.remove(player);
-	}
-	
-	
-	public ArrayList<String> GetReda() {
-		return reda;
-	}
-	
-	
- 	private ArrayList<String> greena = new ArrayList<String>();
- 	
-	public void SetGreena(String player){
-		greena.add(player);
-	}
-
-	public void Unsetgreena(String player){
-		greena.remove(player);
-	}
-	
-	
-	public ArrayList<String> GetGreena() {
-		return greena;
-	}
-	
-	
-	
 	
  
 	 
@@ -117,6 +85,8 @@ public class WinterSlashManager{
 		player.getInventory().clear(); //Clear the players inventory
 		arena.SetFrozen(player.getName());
 		arena.GetSign().add(player.getName());
+		arena.getPlayers().add(player.getName());		//add player to the arena list
+		arena.addPlayerN();
 		
 
 	//Teleport to the arena lobby
@@ -124,10 +94,6 @@ public class WinterSlashManager{
 		Bukkit.getPlayer(p).teleport(arena.getJoinLocation());
 		}
 	
-	
-	
-	//Add the player to the arena list
-	arena.getPlayers().add(player.getName()); //Add the players name to the arena
 	
 	//Add to game array
 	arena.SetGamers(player.getName());
@@ -138,27 +104,7 @@ public class WinterSlashManager{
 	if(!(arena.getPlayers().size() == arena.getMaxPlayers())){
 	arena.sendMessage(ChatColor.DARK_PURPLE + player.getName() + " has joined the arena! We only need " + playersLeft + " to start the game!");
 	player.teleport(arena.getJoinLocation());
-
-	for (String p: arena.getPlayers()) {
-		Player pl = Bukkit.getPlayer(p);
-		 	if(reda.size() > greena.size()){
-		 		greena.add(pl.getName());
-			}
-			else{
-				reda.add(pl.getName());
-			}
-		 	
-	}
 	
-	for(String p: arena.getPlayers()){
-		Player pl = Bukkit.getPlayer(p);
-			if(reda.contains(pl.getName())){
-				arena.GetHash().put(pl.getName(), Team.RED);
-			}
-			else{
-				arena.GetHash().put(pl.getName(), Team.GREEN);
-			}
-		}
 	
 	return;
 	}
@@ -398,8 +344,8 @@ public class WinterSlashManager{
 	//Now lets create an object to represent it:
 	WinterSlashArena arenaobject = new WinterSlashArena(keys, joinLocation, redLocation, greenLocation, endLocation, maxPlayers);
 	String test = greenLocation.toString();
-	WinterSlashMain.getInstance().getLogger().info("Arenas are now loaded!");
 	}
+	WinterSlashMain.getInstance().getLogger().info("WinterSlash: Arenas are now loaded!");
 	}
 	 
 

@@ -37,7 +37,27 @@ public class WinterSlashArena {
 		return players;
 	}
 	
+	private ArrayList<String> reda = new ArrayList<String>();
+	private ArrayList<String> greena = new ArrayList<String>();
 	
+	public void addPlayerN(){
+		WinterSlashMain.getInstance().getLogger().info("debug 0");
+	for (String p: getPlayers()) {
+		WinterSlashMain.getInstance().getLogger().info("debug 1");
+        if(reda.size() > greena.size()){
+        	WinterSlashMain.getInstance().getLogger().info("debug 2");
+        	greena.add(p);
+        	players.put(p, Team.GREEN);
+        	
+       }
+       else{
+    	   WinterSlashMain.getInstance().getLogger().info("debug 3");
+         	reda.add(p);
+        	players.put(p, Team.RED);
+       }
+    
+}
+	}
 	
 	private String name; //Arena name
 	
@@ -54,6 +74,10 @@ public class WinterSlashArena {
 	public Team getTeam(Player p){
 		return players.get(p.getName());
 	}
+	
+	
+
+	
 	
 /*
 	public void addPlayer(Player p){

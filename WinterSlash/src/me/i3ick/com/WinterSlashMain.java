@@ -92,7 +92,7 @@ public class WinterSlashMain extends JavaPlugin{
 		   WorldCreator c = new WorldCreator(playerWorld);
 			c.createWorld();
 		
-		getLogger().info("Worldname:" + playerWorld);
+		getLogger().info("WinterSlash: Worldname: " + playerWorld);
 
 		
 		//register events
