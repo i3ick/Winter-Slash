@@ -4,6 +4,7 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -28,6 +29,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import com.mysql.jdbc.integration.jboss.ExtendedMysqlExceptionSorter;
 
@@ -89,8 +91,8 @@ public class WinterSlashEvents implements Listener {
     	
     
     	 if (!(arena.GetFrozen().contains(e.getPlayer().getName()))) {
-         /*   e.getPlayer().teleport(e.getPlayer().getLocation()); */
-            e.setCancelled(true);
+           e.getPlayer().teleport(e.getPlayer().getLocation()); 
+            
         }
     	 return;
         }
@@ -156,39 +158,42 @@ public class WinterSlashEvents implements Listener {
 
                 //disable FF for red team
              	if (arena.ifPlayerIsRed(victim)) {
+             		WinterSlashMain.getInstance().getLogger().info("Debugger_freeze 1.1");
                     if (arena.GetRedFrozenTeam().contains(victim)) {
+                    	WinterSlashMain.getInstance().getLogger().info("Debugger_freeze 1.2");
                        	if (arena.GetRedTeam().contains(damager.getName())) {
+                       		WinterSlashMain.getInstance().getLogger().info("Debugger_freeze 1.3");
                             //do nothing - unfreezeing process
                         } else {
                             event.setCancelled(true);
                             //disables other people to harm frozen people
                         }
-                    } else {
-                       	 if (arena.GetRedTeam().contains(damager.getName())) {	
+                    } else if (arena.GetRedTeam().contains(damager.getName())) {
                         
                             event.setCancelled(true);
                             //disables friendly fire
                         }
                     }
-                }
+                
              	
              	 //disable FF for green team
              	else if (!(arena.ifPlayerIsRed(victim))) {
+             		WinterSlashMain.getInstance().getLogger().info("Debugger_freeze 2.1");
                     if (arena.GetGreenFrozenTeam().contains(victim)) {
+                    	WinterSlashMain.getInstance().getLogger().info("Debugger_freeze 2.2");
                        	if (arena.GetGreenTeam().contains(damager.getName())) {
+                       		WinterSlashMain.getInstance().getLogger().info("Debugger_freeze 2.3");
                             //do nothing - unfreezeing process
                         } else {
                             event.setCancelled(true);
                             //disables other people to harm frozen people
                         }
-                    } else {
-                       	 if (arena.GetGreenTeam().contains(damager.getName())) {	
-                        
+                    } else if(arena.GetGreenTeam().contains(damager.getName())) {
                             event.setCancelled(true);
                             //disables friendly fire
                         }
                     }
-                }
+                
              	return;
              	}
                 }
@@ -411,7 +416,7 @@ public class WinterSlashEvents implements Listener {
         	if(arena.getPlayers().contains(p.getName())){
         		arena.UnsetAlive(p.getName());
         	
-        		
+        	
         		// End game if green wins
         		if (arena.GetGreenFrozenTeam().size() == arena.GetGreenTeam().size()) {
                     //  end the game...
@@ -518,6 +523,32 @@ public class WinterSlashEvents implements Listener {
             }
             else{
             	e.getPlayer().getInventory().setHelmet(new ItemStack(Material.ICE,1));
+            	//Ready up the armor
+				 ItemStack helmet = new ItemStack(Material.LEATHER_HELMET, 1);
+				 LeatherArmorMeta am = (LeatherArmorMeta)helmet.getItemMeta();
+				 am.setColor(Color.fromRGB(100, 0, 0));
+				 helmet.setItemMeta(am);
+				 
+				 ItemStack chest = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
+				 am.setColor(Color.fromRGB(100, 0, 0));
+				 chest.setItemMeta(am);
+				 
+				 ItemStack pants = new ItemStack(Material.LEATHER_LEGGINGS, 1);
+				 am.setColor(Color.fromRGB(100, 0, 0));
+				 pants.setItemMeta(am);
+				 
+				 ItemStack boots = new ItemStack(Material.LEATHER_BOOTS, 1);
+				 am.setColor(Color.fromRGB(100, 0, 0));
+				 boots.setItemMeta(am);
+				
+				//set armor
+				 e.getPlayer().getInventory().setHelmet(helmet);
+				 e.getPlayer().getInventory().setChestplate(chest);
+				 e.getPlayer().getInventory().setLeggings(pants);
+				 e.getPlayer().getInventory().setBoots(boots);
+            	
+            	
+            	
             	 FileConfiguration ins = WinterSlashMain.getInstance().getConfig();
             	// tp to death position
                 int lastposX = ins.getInt("DeathPosition." + p.getName() + ".X");
@@ -549,7 +580,31 @@ public class WinterSlashEvents implements Listener {
             }
             else{
             	e.getPlayer().getInventory().setHelmet(new ItemStack(Material.ICE,1));
-            	  FileConfiguration ins = WinterSlashMain.getInstance().getConfig();
+            	//Ready up the armor
+				 ItemStack helmet = new ItemStack(Material.LEATHER_HELMET, 1);
+				 LeatherArmorMeta am = (LeatherArmorMeta)helmet.getItemMeta();
+				 am.setColor(Color.fromRGB(0, 100, 0));
+				 helmet.setItemMeta(am);
+				 
+				 ItemStack chest = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
+				 am.setColor(Color.fromRGB(0, 100, 0));
+				 chest.setItemMeta(am);
+				 
+				 ItemStack pants = new ItemStack(Material.LEATHER_LEGGINGS, 1);
+				 am.setColor(Color.fromRGB(0, 100, 0));
+				 pants.setItemMeta(am);
+				 
+				 ItemStack boots = new ItemStack(Material.LEATHER_BOOTS, 1);
+				 am.setColor(Color.fromRGB(0, 100, 0));
+				 boots.setItemMeta(am);
+				
+				//set armor
+				 e.getPlayer().getInventory().setHelmet(helmet);
+				 e.getPlayer().getInventory().setChestplate(chest);
+				 e.getPlayer().getInventory().setLeggings(pants);
+				 e.getPlayer().getInventory().setBoots(boots);
+            	
+            	FileConfiguration ins = WinterSlashMain.getInstance().getConfig();
             	// tp to death position
                 int lastposX = ins.getInt("DeathPosition." + p.getName() + ".X");
                 int lastposY = ins.getInt("DeathPosition." + p.getName() + ".Y");

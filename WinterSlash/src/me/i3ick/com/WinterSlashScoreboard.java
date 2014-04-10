@@ -15,13 +15,13 @@ import org.bukkit.scoreboard.Scoreboard;
  * - 'Frozen' (his score is always the number of the red or blue team)
  */
 public class WinterSlashScoreboard {
-    private WinterSlashMain plugin;
+    private WinterSlashManager plugin;
     public Scoreboard board;
     private Objective redTeam, greenTeam;
     public Score aliveRed, aliveGreen, frozenRed, frozenGreen;
 
-    public WinterSlashScoreboard (WinterSlashMain WinterSlashMain){
-        plugin = WinterSlashMain;
+    public WinterSlashScoreboard (WinterSlashManager winterSlashManager){
+        plugin = winterSlashManager;
         init(); //just to keep the constructor clean.
     }
 

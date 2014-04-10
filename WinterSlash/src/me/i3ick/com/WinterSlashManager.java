@@ -1,5 +1,7 @@
 package me.i3ick.com;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import me.i3ick.com.WinterSlashManager.Team;
 
@@ -57,7 +59,7 @@ public class WinterSlashManager{
 	public static WinterSlashManager getManager() {
 	return am;
 	}
-	 
+	
 	 
 	//A method for getting one of the Arenas out of the list by name:
 	public WinterSlashArena getArena(String name) {
@@ -172,6 +174,23 @@ public class WinterSlashManager{
 	//Teleport out
 	player.teleport(out);
 	
+	//return inventory
+	
+
+	
+	List<ItemStack> invList = (List<ItemStack>)config.get("PlayerData." + player.getName() + ".inventory");
+	ItemStack[] inventory = invList.toArray(new ItemStack[0]); // the 'new ItemStack[0]' is just a type definition for toArray() to avoid casting.
+	player.getInventory().setContents(inventory);
+
+	/*
+    List<ItemStack> newinv2 = new ArrayList<ItemStack>();
+    newinv2.addAll((Collection<? extends ItemStack>) config.get("PlayerData." + player.getName() + ".inventory"));
+                   
+    ItemStack[] newStack = newinv2.toArray(new ItemStack[newinv2.size()]);
+    player.getInventory().setContents(newStack);
+    */
+	
+	
 	//remove the player from the arena list
 	arena.getPlayers().remove(player.getName()); 
 	 
@@ -203,29 +222,16 @@ public class WinterSlashManager{
 	if (getArena(arenaName) != null) { //If the arena exsists
 	 
 	WinterSlashArena arena = getArena(arenaName); //Create an arena for using in this method
+	
+	WinterSlashScoreboard boardmanager = new WinterSlashScoreboard(this);
+	boardmanager.aliveRed.setScore(arena.GetRedTeam().size());
+	boardmanager.aliveGreen.setScore(arena.GetGreenTeam().size());
 	 
 	arena.sendMessage(ChatColor.GOLD + "Ready, set, GO!");
 
 	//Set ingame
 	arena.setInGame(true);
 	
-	//Ready up the players
-	 ItemStack helmet = new ItemStack(Material.LEATHER_HELMET, 1);
-	 LeatherArmorMeta am = (LeatherArmorMeta)helmet.getItemMeta();
-	 am.setColor(Color.fromRGB(0, 100, 0));
-	 helmet.setItemMeta(am);
-	 
-	 ItemStack chest = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
-	 am.setColor(Color.fromRGB(0, 100, 0));
-	 chest.setItemMeta(am);
-	 
-	 ItemStack pants = new ItemStack(Material.LEATHER_LEGGINGS, 1);
-	 am.setColor(Color.fromRGB(0, 100, 0));
-	 pants.setItemMeta(am);
-	 
-	 ItemStack boots = new ItemStack(Material.LEATHER_BOOTS, 1);
-	 am.setColor(Color.fromRGB(0, 100, 0));
-	 boots.setItemMeta(am);
 	
 	 //Teleports the players to their assigned spawns
 	for (String p: arena.getPlayers()) {
@@ -235,12 +241,54 @@ public class WinterSlashManager{
 				arena.RedTeamAdd(pl.getName());
 				pl.sendMessage("You are in the Red Team");
 				pl.teleport(arena.getRedSpawn());
+				
+				//Ready up the armor
+				 ItemStack helmet = new ItemStack(Material.LEATHER_HELMET, 1);
+				 LeatherArmorMeta am = (LeatherArmorMeta)helmet.getItemMeta();
+				 am.setColor(Color.fromRGB(100, 0, 0));
+				 helmet.setItemMeta(am);
+				 
+				 ItemStack chest = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
+				 am.setColor(Color.fromRGB(100, 0, 0));
+				 chest.setItemMeta(am);
+				 
+				 ItemStack pants = new ItemStack(Material.LEATHER_LEGGINGS, 1);
+				 am.setColor(Color.fromRGB(100, 0, 0));
+				 pants.setItemMeta(am);
+				 
+				 ItemStack boots = new ItemStack(Material.LEATHER_BOOTS, 1);
+				 am.setColor(Color.fromRGB(100, 0, 0));
+				 boots.setItemMeta(am);
+				
+				//set armor
+				 Bukkit.getPlayer(p).getInventory().setHelmet(helmet);
+				 Bukkit.getPlayer(p).getInventory().setChestplate(chest);
+				 Bukkit.getPlayer(p).getInventory().setLeggings(pants);
+				 Bukkit.getPlayer(p).getInventory().setBoots(boots);
 			}
 			else{
 				// debug message
 				arena.GreenTeamAdd(pl.getName());
 				pl.sendMessage("You are in the Green Team");
 				pl.teleport(arena.getGreenSpawn());
+				
+				//Ready up the armor
+				 ItemStack helmet = new ItemStack(Material.LEATHER_HELMET, 1);
+				 LeatherArmorMeta am = (LeatherArmorMeta)helmet.getItemMeta();
+				 am.setColor(Color.fromRGB(0, 100, 0));
+				 helmet.setItemMeta(am);
+				 
+				 ItemStack chest = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
+				 am.setColor(Color.fromRGB(0, 100, 0));
+				 chest.setItemMeta(am);
+				 
+				 ItemStack pants = new ItemStack(Material.LEATHER_LEGGINGS, 1);
+				 am.setColor(Color.fromRGB(0, 100, 0));
+				 pants.setItemMeta(am);
+				 
+				 ItemStack boots = new ItemStack(Material.LEATHER_BOOTS, 1);
+				 am.setColor(Color.fromRGB(0, 100, 0));
+				 boots.setItemMeta(am);
 				
 				//set armor
 				 Bukkit.getPlayer(p).getInventory().setHelmet(helmet);
@@ -293,6 +341,18 @@ public class WinterSlashManager{
     int playerPitch = config.getInt("PlayerData." + player.getName() + ".Pitch");
     Location out = new Location(Bukkit.getWorld(world), playerX, playerY, playerZ, playerYaw, playerPitch);
 	
+    //return inventory
+    @SuppressWarnings("unchecked")
+	List<ItemStack> inv = (List<ItemStack>) config.get("PlayerData." + player.getName() + ".inventory");
+    ItemStack[] stacks = inv.toArray(new ItemStack[inv.size()]);
+    player.getInventory().setContents(stacks);
+    
+    //Remove from game array
+    arena.RemoveGamers(player.getName());
+	arena.GetSign().remove(player.getName());
+	arena.greena.remove(player.getName());
+	arena.reda.remove(player.getName());
+	arena.UnsetAlive(player.getName());
     
 	//Teleport out
 	player.teleport(out);

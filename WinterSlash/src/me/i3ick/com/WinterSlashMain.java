@@ -99,8 +99,8 @@ public class WinterSlashMain extends JavaPlugin{
 		this.getServer().getPluginManager().registerEvents(new WinterSlashEvents(this), this);
 		
 		
-		/*
-		 WinterSlashScoreboard.init();
+		
+		/* WinterSlashScoreboard.init();
  		*/
 		
 		
@@ -169,11 +169,6 @@ public class WinterSlashMain extends JavaPlugin{
 			}
 				
 			
-			if(isInventoryEmpty(player)){
-				player.sendMessage(ChatColor.YELLOW + "Please empty your inventory!");
-				return true;
-			}
-			
 			if(WinterSlashManager.getManager().getArena(arena).getPlayers().contains(player.getName())){
 				player.sendMessage(ChatColor.YELLOW + "You are already in this arena!");
 				return true;
@@ -191,7 +186,12 @@ public class WinterSlashMain extends JavaPlugin{
 			}
 			else{
 			player.sendMessage(ChatColor.YELLOW + "You have been put on the games waiting list.");
-
+			
+			for(int i = 0; i < player.getInventory().getContents().length; i++){
+	            ItemStack[] item = player.getInventory().getContents();
+	            if(item != null) this.getConfig().set("PlayerData." + player.getName() + ".inventory", item);
+	        }
+			
 			  //saves player location
 			  
 			 this.getConfig().set("PlayerData." + player.getName() + ".X", player.getLocation().getBlockX());
