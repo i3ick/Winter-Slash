@@ -1,9 +1,13 @@
 package me.i3ick.com;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import net.minecraft.server.v1_7_R1.Items;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -131,6 +135,8 @@ public class WinterSlashMain extends JavaPlugin{
 		return false;
 		}
 	
+	
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String CommandLabel, String[] args){
 		Player player = (Player) sender;
@@ -163,11 +169,17 @@ public class WinterSlashMain extends JavaPlugin{
 				return true;
 			}
 			
+			
+			
 			if(WinterSlashManager.getInstance().getArena(arena) == null){
 				player.sendMessage(ChatColor.RED + "This arena doesn't exist");
 				return true;
 			}
 				
+			if(isInventoryEmpty(player)){
+				player.sendMessage(ChatColor.YELLOW + "Please empty your inventory!");
+				return true;
+			}
 			
 			if(WinterSlashManager.getManager().getArena(arena).getPlayers().contains(player.getName())){
 				player.sendMessage(ChatColor.YELLOW + "You are already in this arena!");
@@ -186,11 +198,12 @@ public class WinterSlashMain extends JavaPlugin{
 			}
 			else{
 			player.sendMessage(ChatColor.YELLOW + "You have been put on the games waiting list.");
-			
-			for(int i = 0; i < player.getInventory().getContents().length; i++){
-	            ItemStack[] item = player.getInventory().getContents();
-	            if(item != null) this.getConfig().set("PlayerData." + player.getName() + ".inventory", item);
-	        }
+	
+
+			/*
+			this.getConfig().set("PlayerData." + p.getName() + ".armor", player.getInventory().getArmorContents());
+	        this.getConfig().set("PlayerData." + p.getName() + ".inventory", player.getInventory().getContents());
+	        */
 			
 			  //saves player location
 			  

@@ -1,4 +1,5 @@
 package me.i3ick.com;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -49,6 +50,7 @@ public class WinterSlashManager{
 	private ArrayList<WinterSlashArena> arenas = new ArrayList<WinterSlashArena>();
 	
 	
+	
 	public void setup(){
 		//load config
 	}
@@ -60,7 +62,8 @@ public class WinterSlashManager{
 	return am;
 	}
 	
-	 
+	
+	
 	//A method for getting one of the Arenas out of the list by name:
 	public WinterSlashArena getArena(String name) {
 	for (WinterSlashArena a: WinterSlashArena.arenaObjects) { //For all of the arenas in the list of objects
@@ -177,18 +180,6 @@ public class WinterSlashManager{
 	//return inventory
 	
 
-	
-	List<ItemStack> invList = (List<ItemStack>)config.get("PlayerData." + player.getName() + ".inventory");
-	ItemStack[] inventory = invList.toArray(new ItemStack[0]); // the 'new ItemStack[0]' is just a type definition for toArray() to avoid casting.
-	player.getInventory().setContents(inventory);
-
-	/*
-    List<ItemStack> newinv2 = new ArrayList<ItemStack>();
-    newinv2.addAll((Collection<? extends ItemStack>) config.get("PlayerData." + player.getName() + ".inventory"));
-                   
-    ItemStack[] newStack = newinv2.toArray(new ItemStack[newinv2.size()]);
-    player.getInventory().setContents(newStack);
-    */
 	
 	
 	//remove the player from the arena list
